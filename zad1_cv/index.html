@@ -6,9 +6,7 @@
     <title>CV - Kacper Pietrak</title>
     
     <style>
-        /* --- NOWOCZESNY I CZYSTY STYL CSS OD ZERA --- */
-        
-        /* Reset podstawowych marginesów dla lepszej kontroli */
+        /* --- NOWOCZESNY I CZYSTY STYL CSS --- */
         * {
             margin: 0;
             padding: 0;
@@ -16,75 +14,68 @@
         }
 
         body {
-            /* Użycie nowoczesnego stosu czcionek systemowych */
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            line-height: 1.7; /* Większy odstęp między liniami dla czytelności */
-            background-color: #f0f2f5; /* Delikatne, szare tło strony */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            background-color: #f0f2f5;
             color: #333;
-            padding: 40px 20px; /* Margines od krawędzi ekranu */
+            padding: 40px 20px;
         }
 
-        /* Główny kontener - "karta" CV */
         main {
             background-color: white;
-            max-width: 850px; /* Nieco szerszy dla lepszego układu */
-            margin: 0 auto; /* Wyśrodkowanie na ekranie */
-            padding: 50px 60px; /* Duże odstępy wewnątrz karty */
-            border-radius: 12px; /* Bardziej zaokrąglone rogi */
-            /* Głęboki, profesjonalny cień */
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 50px 60px;
+            border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
-        /* Nagłówek strony */
         header {
             text-align: center;
             margin-bottom: 50px;
             padding-bottom: 30px;
-            border-bottom: 1px solid #eaeaea; /* Cieńsza linia oddzielająca */
+            border-bottom: 1px solid #eaeaea;
         }
 
         h1 {
-            color: #1a202c; /* Bardzo ciemny granat */
+            color: #1a202c;
             font-size: 2.5em;
-            font-weight: 800; /* Bardzo gruba czcionka */
-            letter-spacing: -1px; /* Lekkie ściśnięcie liter */
+            font-weight: 800;
+            letter-spacing: -1px;
             margin-bottom: 15px;
         }
 
         header img {
-            max-width: 180px; /* Nieco mniejsze zdjęcie */
+            max-width: 180px;
             height: auto;
-            border-radius: 50%; /* Idealne koło */
-            border: 4px solid white; /* Biała ramka wewnątrz cienia */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15); /* Cień pod zdjęciem */
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             margin-top: 10px;
         }
 
-        /* Sekcje */
         section {
             margin-bottom: 40px;
         }
 
         h2 {
-            color: #004494; /* Profesjonalny, ciemniejszy niebieski */
+            color: #004494;
             font-size: 1.5em;
             font-weight: 700;
             margin-bottom: 25px;
             padding-left: 15px;
-            /* Zamiast linii na dole, dodajemy pasek po lewej */
             border-left: 5px solid #004494;
         }
 
         p {
             margin-bottom: 15px;
-            color: #4a5568; /* Nieco jaśniejszy kolor dla tekstu body */
+            color: #4a5568;
         }
 
-        /* Listy */
         ul {
             padding-left: 25px;
             margin-bottom: 20px;
-            list-style-type: circle; /* Inny styl punktorów */
+            list-style-type: circle;
         }
 
         li {
@@ -93,42 +84,89 @@
         }
 
         li strong {
-            color: #2d3748; /* Mocniejszy kolor dla nazw projektów */
+            color: #2d3748;
         }
 
-        /* Karty doświadczenia (article) */
-        article {
-            background-color: #f9fafb; /* Bardzo jasne tło wewnątrz karty */
-            padding: 25px;
+        /* --- STYLIZACJA ROZWIJANYCH SEKCJI (DETAILS/SUMMARY) --- */
+        details {
+            background-color: #f9fafb;
+            border: 1px solid #eaeaea;
             border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #eaeaea; /* Bardzo cienka ramka */
-            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Efekt najechania */
+            margin-bottom: 15px;
+            overflow: hidden; /* Utrzymuje cień i tło w ryzach */
+            transition: box-shadow 0.2s ease;
         }
 
-        article:hover {
-            /* Delikatne uniesienie przy najechaniu */
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        details:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        summary {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #2d3748;
+            padding: 20px;
+            cursor: pointer;
+            list-style: none; /* Usuwa domyślny trójkącik w większości przeglądarek */
+            outline: none;
+            display: flex;
+            align-items: center;
+            background-color: #f4f6f9;
+        }
+
+        /* Usuwanie domyślnego znacznika dla Safari/Chrome */
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        /* Nasza własna, animowana strzałka */
+        summary::before {
+            content: "▶";
+            color: #004494;
+            font-size: 0.8em;
+            margin-right: 15px;
+            transition: transform 0.3s ease; /* Płynny obrót */
+        }
+
+        /* Kiedy details jest otwarte (kliknięte), obróć strzałkę w dół */
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        /* Wnętrze rozwiniętej sekcji (nasz article) */
+        article {
+            padding: 0 20px 20px 50px; /* Wcięcie tekstu względem nagłówka */
+            background-color: #f9fafb;
+        }
+
+        /* Animacja płynnego pojawiania się tekstu */
+        details[open] article {
+            animation: fadeInDown 0.4s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         article h3 {
-            color: #2d3748;
-            font-size: 1.2em;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 5px;
+            display: none; /* Ukrywamy nagłówek h3, bo użyliśmy go w klikalnym summary */
         }
 
-        /* Stylizacja okresu pracy wewnątrz article */
         article p:first-of-type {
             font-size: 0.9em;
-            color: #718096; /* Szary kolor dla dat */
+            color: #718096;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            margin-top: 5px;
         }
 
-        /* Stopka */
         footer {
             text-align: center;
             font-size: 0.85em;
@@ -138,21 +176,18 @@
             border-top: 1px solid #eaeaea;
         }
 
-        /* Linki */
         a {
             color: #004494;
             text-decoration: none;
             font-weight: 600;
-            /* Płynny efekt zmiany koloru */
             transition: color 0.2s ease;
         }
 
         a:hover {
-            color: #002a5c; /* Ciemniejszy przy najechaniu */
+            color: #002a5c;
             text-decoration: underline;
         }
 
-        /* Prosty styl dla danych kontaktowych, żeby wyglądały czyściej */
         section p a[href^="mailto:"],
         section p a[href^="tel:"] {
             background-color: #e6f0ff;
@@ -161,20 +196,12 @@
             margin-left: -5px;
         }
 
-        /* --- RESPONSYWNOŚĆ NA TELEFONY --- */
         @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            main {
-                padding: 30px 20px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-            h2 {
-                font-size: 1.3em;
-            }
+            body { padding: 10px; }
+            main { padding: 30px 20px; }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.3em; }
+            article { padding-left: 20px; }
         }
     </style>
 </head>
@@ -214,20 +241,29 @@
             </ul>
         </section>
 
+        <!-- ZMODYFIKOWANA SEKCJA Z ANIMOWANYMI ZAKŁADKAMI -->
         <section>
             <h2>Doświadczenie</h2>
             
-            <article>
-                <h3>Pracownik Ochrony - Juventus (Biedronka)</h3>
-                <p>Okres: 06.2024 - 12.2024</p>
-                <p>Zapewnienie bezpieczeństwa na terenie obiektu handlowego, monitorowanie systemów CCTV oraz asystowanie pracownikom sklepu w sytuacjach konfliktowych. Praca wymagała skupienia, odpowiedzialności oraz szybkiego reagowania na problemy.</p>
-            </article>
+            <!-- Pierwsza rozwijana sekcja -->
+            <details>
+                <summary>Pracownik Ochrony - Juventus (Biedronka)</summary>
+                <article>
+                    <h3>Pracownik Ochrony - Juventus (Biedronka)</h3> <!-- Ukryte w CSS, zostawione by spełnić wymóg nagłówka w article -->
+                    <p>Okres: 06.2024 - 12.2024</p>
+                    <p>Zapewnienie bezpieczeństwa na terenie obiektu handlowego, monitorowanie systemów CCTV oraz asystowanie pracownikom sklepu w sytuacjach konfliktowych. Praca wymagała skupienia, odpowiedzialności oraz szybkiego reagowania na problemy.</p>
+                </article>
+            </details>
 
-            <article>
-                <h3>Pracownik Sklepu - Żabka Polska</h3>
-                <p>Okres: 01.2023 - 05.2024</p>
-                <p>Obsługa klienta przy kasie fiskalnej, przyjmowanie dostaw, dbanie o ekspozycję towaru oraz utrzymywanie standardów czystości. Nauczyłem się tu pracy pod presją czasu oraz sprawnej komunikacji z klientami.</p>
-            </article>
+            <!-- Druga rozwijana sekcja -->
+            <details>
+                <summary>Pracownik Sklepu - Żabka Polska</summary>
+                <article>
+                    <h3>Pracownik Sklepu - Żabka Polska</h3>
+                    <p>Okres: 01.2023 - 05.2024</p>
+                    <p>Obsługa klienta przy kasie fiskalnej, przyjmowanie dostaw, dbanie o ekspozycję towaru oraz utrzymywanie standardów czystości. Nauczyłem się tu pracy pod presją czasu oraz sprawnej komunikacji z klientami.</p>
+                </article>
+            </details>
         </section>
 
         <section>
