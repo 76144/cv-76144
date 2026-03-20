@@ -4,87 +4,175 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV - Kacper Pietrak</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        header img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-top: 15px;
+        }
+
+        main {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #0056b3;
+            color: #0056b3;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        article {
+            background-color: #fcfcfc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+
+        article h3 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
     <header>
         <h1>Kacper Pietrak - CV</h1>
-        <!-- Zdjęcie z wymaganym, niepustym atrybutem alt -->
-        <img src="[moje_zdjecie.jpg]" alt="Zdjęcie profilowe - [Twoje Imię i Nazwisko]">
+        <img src="moje_zdjecie.jpg" alt="Zdjęcie profilowe - Kacper Pietrak">
     </header>
 
     <main>
-        <!-- Sekcja 1: Kontakt -->
+        
         <section>
             <h2>Kontakt</h2>
-            <p>Email: <a href="mailto:[twoj.email@domena.pl]">kpietra5@stu.vistula.edu.pl</a></p>
-            <p>Telefon: <a href="tel:[+48123456789]">[+48 786 118 136]</a></p>
+            <p>Email: <a href="mailto:kpietra5@stu.vistula.edu.pl">kpietra5@stu.vistula.edu.pl</a></p>
+            <p>Telefon: <a href="tel:+48786118136">+48 786 118 136</a></p>
             <p>Miasto: Warszawa</p>
             
             <p>Profile zewnętrzne:</p>
             <ul>
-                <!-- Minimum 2 linki zewnętrzne z wymaganymi atrybutami -->
-                <li><a href="[Twój link do GitHuba]" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-                <li><a href="[Twój link do LinkedIn]" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+                <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer">Mój profil GitHub</a></li>
+                <li><a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer">Profil LinkedIn</a></li>
             </ul>
         </section>
 
-        <!-- Sekcja 2: O mnie -->
         <section>
             <h2>O mnie</h2>
-            <p>[Tutaj wpisz kilka zdań na swój temat, o swoich zainteresowaniach zawodowych i celach.]</p>
+            <p>Jestem studentem pierwszego roku informatyki. Od zawsze fascynowały mnie nowe technologie, a moją największą pasją jest motoryzacja połączona z informatyką – interesuję się systemami wbudowanymi w nowoczesnych samochodach, diagnostyką komputerową pojazdów oraz elektroniką. Moim celem jest rozwój w branży IT, by w przyszłości tworzyć oprogramowanie wspierające branżę automotive.</p>
         </section>
 
-        <!-- Sekcja 3: Umiejętności -->
         <section>
             <h2>Umiejętności</h2>
-            <!-- Lista (ul lub ol) - min. 5 pozycji -->
             <ul>
-                <li>[Umiejętność 1, np. HTML5]</li>
-                <li>[Umiejętność 2, np. CSS3]</li>
-                <li>[Umiejętność 3, np. Podstawy Git]</li>
-                <li>[Umiejętność 4, np. Język angielski B2]</li>
-                <li>[Umiejętność 5, np. Rozwiązywanie problemów]</li>
+                <li>Podstawy tworzenia stron WWW (HTML5, CSS3)</li>
+                <li>Podstawy programowania i myślenia algorytmicznego</li>
+                <li>Znajomość budowy i obsługi komputerowej układów w pojazdach (diagnostyka OBD-II)</li>
+                <li>Obsługa systemów operacyjnych z rodziny Windows i Linux</li>
+                <li>Prawo jazdy kat. B oraz czynne zainteresowanie rynkiem motoryzacyjnym</li>
             </ul>
         </section>
 
-        <!-- Sekcja 4: Doświadczenie -->
         <section>
             <h2>Doświadczenie</h2>
-            <!-- Min. 2 pozycje, każda jako article -->
+            
             <article>
-                <h3>[Stanowisko 1] - [Firma 1]</h3>
-                <p>Okres: [np. 01.2023 - obecnie]</p>
-                <p>[Opis Twoich obowiązków i osiągnięć na tym stanowisku.]</p>
+                <h3>Pracownik Ochrony - Jeronimo Martins (Biedronka)</h3>
+                <p>Okres: 06.2024 - 12.2024</p>
+                <p>Zapewnienie bezpieczeństwa na terenie obiektu handlowego, monitorowanie systemów CCTV oraz asystowanie pracownikom sklepu w sytuacjach konfliktowych. Praca wymagała skupienia, odpowiedzialności oraz szybkiego reagowania na problemy.</p>
             </article>
+
             <article>
-                <h3>[Stanowisko 2] - [Firma 2]</h3>
-                <p>Okres: [np. 06.2022 - 12.2022]</p>
-                <p>[Opis Twoich obowiązków i osiągnięć na tym stanowisku.]</p>
+                <h3>Pracownik Sklepu - Żabka Polska</h3>
+                <p>Okres: 01.2023 - 05.2024</p>
+                <p>Obsługa klienta przy kasie fiskalnej, przyjmowanie dostaw, dbanie o ekspozycję towaru oraz utrzymywanie standardów czystości. Nauczyłem się tu pracy pod presją czasu oraz sprawnej komunikacji z klientami.</p>
             </article>
         </section>
 
-        <!-- Sekcja 5: Edukacja -->
         <section>
             <h2>Edukacja</h2>
-            <p>[Nazwa uczelni, np. Politechnika Łódzka]</p>
-            <p>Kierunek: [Twój kierunek]</p>
-            <p>Okres: [np. 2023 - obecnie]</p>
+            <p>Akademia Finansów i Biznesu Vistula</p>
+            <p>Kierunek: Informatyka</p>
+            <p>Okres: 2025 - obecnie</p>
         </section>
 
-        <!-- Sekcja 6: Projekty -->
         <section>
             <h2>Projekty</h2>
-            <!-- Lista (ul lub ol) - min. 2 pozycje -->
             <ul>
-                <li><strong>[Nazwa projektu 1]</strong>: [Krótki opis, np. Gra w kółko i krzyżyk napisana w C++]</li>
-                <li><strong>[Nazwa projektu 2]</strong>: [Krótki opis, np. Prosta strona wizytówka dla lokalnej firmy]</li>
+                <li><strong>Osobiste CV (HTML/CSS)</strong>: Moja wizytówka internetowa napisana od zera przy użyciu poprawnych, semantycznych znaczników HTML5.</li>
+                <li><strong>Prosta baza samochodów</strong>: Koncepcyjny projekt katalogu aut, kategoryzujący modele według silników i wyposażenia elektronicznego.</li>
             </ul>
         </section>
+        
     </main>
 
     <footer>
-        <p>&copy; 2026 [Twoje Imię i Nazwisko]. Wyrażam zgodę na przetwarzanie moich danych osobowych w celu rekrutacji zgodnie z art. 6 ust. 1 lit. a Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. (RODO).</p>
+        <p>&copy; 2026 Kacper Pietrak. Wyrażam zgodę na przetwarzanie moich danych osobowych w celu rekrutacji zgodnie z art. 6 ust. 1 lit. a Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. (RODO).</p>
     </footer>
 
 </body>
