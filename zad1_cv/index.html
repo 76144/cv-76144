@@ -6,7 +6,6 @@
     <title>CV - Kacper Pietrak</title>
     
     <style>
-        /* --- NOWOCZESNY I CZYSTY STYL CSS --- */
         * {
             margin: 0;
             padding: 0;
@@ -87,7 +86,6 @@
             color: #2d3748;
         }
 
-        /* --- STYLIZACJA ROZWIJANYCH SEKCJI (DETAILS/SUMMARY) --- */
         details {
             background-color: #f9fafb;
             border: 1px solid #eaeaea;
@@ -107,39 +105,34 @@
             color: #2d3748;
             padding: 20px;
             cursor: pointer;
-            list-style: none; /* Usuwa domyślny trójkącik w większości przeglądarek */
+            list-style: none;
             outline: none;
             display: flex;
             align-items: center;
             background-color: #f4f6f9;
         }
 
-        /* Usuwanie domyślnego znacznika dla Safari/Chrome */
         summary::-webkit-details-marker {
             display: none;
         }
 
-        /* Nasza własna, animowana strzałka */
         summary::before {
             content: "▶";
             color: #004494;
             font-size: 0.8em;
             margin-right: 15px;
-            transition: transform 0.3s ease; /* Płynny obrót */
+            transition: transform 0.3s ease;
         }
 
-        /* Kiedy details jest otwarte (kliknięte), obróć strzałkę w dół */
         details[open] summary::before {
             transform: rotate(90deg);
         }
 
-        /* Wnętrze rozwiniętej sekcji (nasz article) */
         article {
-            padding: 0 20px 20px 50px; /* Wcięcie tekstu względem nagłówka */
+            padding: 0 20px 20px 50px;
             background-color: #f9fafb;
         }
 
-        /* Animacja płynnego pojawiania się tekstu */
         details[open] article {
             animation: fadeInDown 0.4s ease-out;
         }
@@ -156,7 +149,7 @@
         }
 
         article h3 {
-            display: none; /* Ukrywamy nagłówek h3, bo użyliśmy go w klikalnym summary */
+            display: none;
         }
 
         article p:first-of-type {
@@ -242,7 +235,6 @@
             </ul>
         </section>
 
-        <!-- ZMODYFIKOWANA SEKCJA Z ANIMOWANYMI ZAKŁADKAMI -->
         <section>
             <h2>Doświadczenie</h2>
             
@@ -250,13 +242,12 @@
             <details>
                 <summary>Pracownik Ochrony - Juventus (Biedronka)</summary>
                 <article>
-                    <h3>Pracownik Ochrony - Juventus (Biedronka)</h3> <!-- Ukryte w CSS, zostawione by spełnić wymóg nagłówka w article -->
+                    <h3>Pracownik Ochrony - Juventus (Biedronka)</h3>
                     <p>Okres: 06.2024 - 12.2024</p>
                     <p>Zapewnienie bezpieczeństwa na terenie obiektu handlowego, monitorowanie systemów CCTV oraz asystowanie pracownikom sklepu w sytuacjach konfliktowych. Praca wymagała skupienia, odpowiedzialności oraz szybkiego reagowania na problemy.</p>
                 </article>
             </details>
 
-            <!-- Druga rozwijana sekcja -->
             <details>
                 <summary>Pracownik Sklepu - Żabka Polska</summary>
                 <article>
