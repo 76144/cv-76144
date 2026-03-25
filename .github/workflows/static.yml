@@ -22,7 +22,7 @@ jobs:
 
           destination-github-username: '76144'
 
-          destination-repository-name: 'zad1_cv'
+          destination-repository-name: 'cv1-76144'
 
           user-email: kpietra5@stu.vistula.edu.pl
           target-branch: main
