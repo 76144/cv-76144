@@ -24,5 +24,5 @@ jobs:
 
           destination-repository-name: 'zad1_cv'
 
-          user-email: Mail
+          user-email: kpietra5@stu.vistula.edu.pl
           target-branch: main
