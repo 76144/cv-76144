@@ -15,14 +15,14 @@ jobs:
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
-          API_TOKEN_GITHUB: ${{ secrets.###}} (zamiast ### wpisujesz nazwę tokenu)
+          API_TOKEN_GITHUB: ${{ secrets.MY_TOKEN}}
         with:
 
-          source-directory: 'Folder z prywatnego' 
+          source-directory: 'zad1_cv' 
 
-          destination-github-username: 'Login'
+          destination-github-username: '76144'
 
-          destination-repository-name: 'Repozytorium publiczny'
+          destination-repository-name: 'zad1_cv'
 
           user-email: Mail
           target-branch: main
