@@ -7,7 +7,7 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.7;
-    background-color: #fef2f2; /* Jasnoczerwone tło */
+    background-color: #fef2f2;
     color: #333;
     padding: 40px 20px;
 }
@@ -17,8 +17,8 @@ main {
     max-width: 850px;
     margin: 0 auto;
     padding: 50px 60px;
-    border-radius: 0; /* ZMIANA: Ostre kąty zamiast zaokrąglonych */
-    border: 2px solid #fca5a5; /* ZMIANA: Twarda ramka zamiast cienia */
+    border-radius: 0;
+    border: 2px solid #fca5a5;
 }
 
 header {
@@ -29,7 +29,7 @@ header {
 }
 
 h1 {
-    color: #7f1d1d; /* Ciemna czerwień */
+    color: #7f1d1d;
     font-size: 2.5em;
     font-weight: 800;
     letter-spacing: -1px;
@@ -39,8 +39,8 @@ h1 {
 header img {
     max-width: 180px;
     height: auto;
-    border-radius: 0; /* ZMIANA: Kwadratowe zdjęcie profilowe */
-    border: 4px double #b91c1c; /* ZMIANA: Podwójna ramka */
+    border-radius: 0;
+    border: 4px double #b91c1c;
     margin-top: 10px;
 }
 
@@ -53,9 +53,9 @@ h2 {
     font-size: 1.5em;
     font-weight: 700;
     margin-bottom: 25px;
-    padding-bottom: 5px; /* ZMIANA: Odstęp na dole zamiast z lewej */
-    border-left: none; /* ZMIANA: Usunięcie lewej linii */
-    border-bottom: 3px double #b91c1c; /* ZMIANA: Podwójna linia na dole */
+    padding-bottom: 5px;
+    border-left: none;
+    border-bottom: 3px double #b91c1c;
 }
 
 p {
@@ -66,7 +66,7 @@ p {
 ul {
     padding-left: 25px;
     margin-bottom: 20px;
-    list-style-type: square; /* ZMIANA: Kwadratowe punktory */
+    list-style-type: square;
 }
 
 li {
@@ -81,7 +81,7 @@ li strong {
 details {
     background-color: #f9fafb;
     border: 1px solid #fca5a5;
-    border-radius: 0; /* ZMIANA: Ostre kąty */
+    border-radius: 0;
     margin-bottom: 15px;
     overflow: hidden;
 }
@@ -96,7 +96,7 @@ summary {
     outline: none;
     display: flex;
     align-items: center;
-    background-color: #fee2e2; /* Delikatna czerwień */
+    background-color: #fee2e2;
 }
 
 summary::-webkit-details-marker {
@@ -104,7 +104,7 @@ summary::-webkit-details-marker {
 }
 
 summary::before {
-    content: "▼"; /* ZMIANA: Inna strzałka w dropdownie */
+    content: "▼";
     color: #b91c1c;
     font-size: 0.8em;
     margin-right: 15px;
@@ -143,15 +143,14 @@ footer {
 
 a {
     color: #b91c1c;
-    text-decoration: underline; /* ZMIANA: Podkreślenie linków włączone na stałe */
+    text-decoration: underline;
     font-weight: 600;
     transition: color 0.2s ease;
 }
 
 a:hover {
     color: #7f1d1d;
-    text-decoration: none; /* ZMIANA: Usunięcie podkreślenia po najechaniu */
-}
+    text-decoration: none;
 
 section p a[href^="mailto:"],
 section p a[href^="tel:"] {
