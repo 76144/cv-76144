@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - Kacper Pietrak</title>
-    <link rel="stylesheet" href="red.css">
+    <title>CV - Kacper Pietrak - 76144</title>
+    <link id="theme-link" rel="stylesheet" href="red.css">
 </head>
 <body>
 
@@ -12,6 +12,11 @@
         <header>
             <h1>Kacper Pietrak - CV</h1>
             <img src="moje_zdjecie.jpg.png" alt="Zdjęcie profilowe - Kacper Pietrak">
+            
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                <button id="btn-theme" style="padding: 8px 16px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;">Zmień motyw (Red/Green)</button>
+                <button id="btn-toggle-projects" style="padding: 8px 16px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;">Pokaż/Ukryj Projekty</button>
+            </div>
         </header>
         
         <section>
@@ -19,7 +24,6 @@
             <p>Email: <a href="mailto:kpietra5@stu.vistula.edu.pl">kpietra5@stu.vistula.edu.pl</a></p>
             <p>Telefon: <a href="tel:+48786118136">+48 786 118 136</a></p>
             <p>Miasto: Warszawa</p>
-            
             <p>Profile zewnętrzne:</p>
             <ul>
                 <li><a href="https://github.com/76144" target="_blank" rel="noopener noreferrer">Mój profil GitHub</a></li>
@@ -45,7 +49,6 @@
 
         <section>
             <h2>Doświadczenie</h2>
-            
             <details>
                 <summary>Pracownik Ochrony - Juventus (Biedronka)</summary>
                 <article>
@@ -54,7 +57,6 @@
                     <p>Zapewnienie bezpieczeństwa na terenie obiektu handlowego, monitorowanie systemów CCTV oraz asystowanie pracownikom sklepu w sytuacjach konfliktowych. Praca wymagała skupienia, odpowiedzialności oraz szybkiego reagowania na problemy.</p>
                 </article>
             </details>
-
             <details>
                 <summary>Pracownik Sklepu - Żabka Polska</summary>
                 <article>
@@ -72,7 +74,7 @@
             <p>Okres: 2025 - obecnie</p>
         </section>
 
-        <section>
+        <section id="sekcja-projekty">
             <h2>Projekty</h2>
             <ul>
                 <li><strong>Osobiste CV (HTML/CSS)</strong>: Moja wizytówka internetowa napisana od zera przy użyciu poprawnych, semantycznych znaczników HTML5.</li>
@@ -83,8 +85,10 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 Kacper Pietrak. Wyrażam zgodę na przetwarzanie moich danych osobowych w celu rekrutacji zgodnie z art. 6 ust. 1 lit. a Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. (RODO).</p>
+        <p>&copy; 2026 Kacper Pietrak. Nr indeksu: 76144.</p>
+        <p style="font-size: 0.8em; margin-top: 10px;">Wyrażam zgodę na przetwarzanie moich danych osobowych w celu rekrutacji zgodnie z art. 6 ust. 1 lit. a Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. (RODO).</p>
     </footer>
 
+    <script src="script.js"></script>
 </body>
 </html>
