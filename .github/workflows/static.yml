@@ -18,7 +18,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.MY_TOKEN }}
         with:
 
-          source-directory: 'zad3_css' 
+          source-directory: 'zad3_motyw' 
 
           destination-github-username: '76144'
 
