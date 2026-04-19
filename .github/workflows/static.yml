@@ -18,7 +18,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.MY_TOKEN }}
         with:
 
-          source-directory: 'zad3_motyw' 
+          source-directory: 'zad4_java' 
 
           destination-github-username: '76144'
 
