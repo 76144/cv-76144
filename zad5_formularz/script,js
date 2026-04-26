@@ -1,21 +1,78 @@
-const btnTheme = document.getElementById('btn-theme');
-const themeLink = document.getElementById('theme-link');
+// Pobieramy formularz po jego ID
+const form = document.getElementById('contactForm');
+const successMessage = document.getElementById('success-message');
 
-btnTheme.addEventListener('click', function() {
-    if (themeLink.getAttribute('href') === 'red.css') {
-        themeLink.setAttribute('href', 'green.css');
-    } else {
-        themeLink.setAttribute('href', 'red.css');
+// Nasłuchujemy na zdarzenie wysłania formularza (submit)
+form.addEventListener('submit', function(event) {
+    // Zatrzymujemy domyślne zachowanie (czyli przeładowanie strony)
+    event.preventDefault();
+    
+    // Ukrywamy komunikat sukcesu przy każdej nowej próbie
+    successMessage.style.display = 'none';
+
+    // Zmienna śledząca, czy formularz jest wolny od błędów
+    let isValid = true;
+
+    // Pobieramy wartości wpisane przez użytkownika i usuwamy białe znaki
+    const imie = document.getElementById('imie').value.trim();
+    const nazwisko = document.getElementById('nazwisko').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const wiadomosc = document.getElementById('wiadomosc').value.trim();
+
+    // Funkcja pomocnicza do resetowania błędów
+    function clearErrors() {
+        const errors = document.querySelectorAll('.error-message');
+        const inputs = document.querySelectorAll('input, textarea');
+        errors.forEach(error => error.textContent = '');
+        inputs.forEach(input => input.classList.remove('input-error'));
     }
-});
 
-const btnToggleProjects = document.getElementById('btn-toggle-projects');
-const sectionProjects = document.getElementById('sekcja-projekty');
+    // Funkcja pomocnicza do wyświetlania błędu
+    function showError(fieldId, message) {
+        document.getElementById('error-' + fieldId).textContent = message;
+        document.getElementById(fieldId).classList.add('input-error');
+        isValid = false;
+    }
 
-btnToggleProjects.addEventListener('click', function() {
-    if (sectionProjects.style.display === 'none') {
-        sectionProjects.style.display = 'block';
-    } else {
-        sectionProjects.style.display = 'none';
+    // Najpierw czyścimy stare błędy
+    clearErrors();
+
+    // Wyrażenia regularne (Regex) do sprawdzeń
+    const containsNumber = /\d/; // Sprawdza czy ciąg zawiera jakąkolwiek cyfrę
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Podstawowe sprawdzanie formatu email
+
+    // 1. Walidacja pola: Imię
+    if (imie === '') {
+        showError('imie', 'Pole imię jest wymagane.');
+    } else if (containsNumber.test(imie)) {
+        showError('imie', 'Imię nie może zawierać cyfr.');
+    }
+
+    // 2. Walidacja pola: Nazwisko
+    if (nazwisko === '') {
+        showError('nazwisko', 'Pole nazwisko jest wymagane.');
+    } else if (containsNumber.test(nazwisko)) {
+        showError('nazwisko', 'Nazwisko nie może zawierać cyfr.');
+    }
+
+    // 3. Walidacja pola: E-mail
+    if (email === '') {
+        showError('email', 'Pole e-mail jest wymagane.');
+    } else if (!validEmail.test(email)) {
+        showError('email', 'Proszę podać poprawny adres e-mail (np. jan@kowalski.pl).');
+    }
+
+    // 4. Walidacja pola: Wiadomość
+    if (wiadomosc === '') {
+        showError('wiadomosc', 'Pole wiadomość jest wymagane.');
+    }
+
+    // Jeśli wszystko jest OK (isValid pozostało true)
+    if (isValid) {
+        // Pokazujemy zielony komunikat na górze
+        successMessage.style.display = 'block';
+        
+        // Opcjonalnie: czyścimy formularz po udanym "wysłaniu"
+        form.reset();
     }
 });
