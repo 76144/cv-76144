@@ -146,7 +146,6 @@ article p:first-of-type {
     margin-top: 5px;
 }
 
-/* UKŁAD FORMULARZA */
 .form-row {
     display: flex;
     margin-bottom: 15px;
@@ -194,7 +193,6 @@ button[type="submit"]:hover {
     background-color: #14532d;
 }
 
-/* STYLE BŁĘDÓW */
 .error-message {
     color: #dc2626;
     font-size: 0.85em;
