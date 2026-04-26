@@ -1,170 +1,94 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Kacper Pietrak - 76144</title>
+    <link id="theme-link" rel="stylesheet" href="red.css">
+</head>
+<body>
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.7;
-    background-color: #fef2f2;
-    color: #333;
-    padding: 40px 20px;
-}
+    <main>
+        <header>
+            <h1>Kacper Pietrak - CV</h1>
+            <img src="moje_zdjecie.jpg.png" alt="Zdjęcie profilowe - Kacper Pietrak">
+            
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                <button id="btn-theme" style="padding: 8px 16px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;">Zmień motyw (Red/Green)</button>
+                <button id="btn-toggle-projects" style="padding: 8px 16px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;">Pokaż/Ukryj Projekty</button>
+            </div>
+        </header>
+        
+        <section>
+            <h2>Kontakt</h2>
+            <p>Email: <a href="mailto:kpietra5@stu.vistula.edu.pl">kpietra5@stu.vistula.edu.pl</a></p>
+            <p>Telefon: <a href="tel:+48786118136">+48 786 118 136</a></p>
+            <p>Miasto: Warszawa</p>
+            <p>Profile zewnętrzne:</p>
+            <ul>
+                <li><a href="https://github.com/76144" target="_blank" rel="noopener noreferrer">Mój profil GitHub</a></li>
+                <li><a href="https://www.linkedin.com/in/kacper-pietrak-a77a523b8/" target="_blank" rel="noopener noreferrer">Profil LinkedIn</a></li>
+            </ul>
+        </section>
 
-main {
-    background-color: white;
-    max-width: 850px;
-    margin: 0 auto;
-    padding: 50px 60px;
-    border-radius: 0;
-    border: 2px solid #fca5a5;
-}
+        <section>
+            <h2>O mnie</h2>
+            <p>Jestem studentem pierwszego roku informatyki. Od zawsze fascynowały mnie nowe technologie, a moją największą pasją jest motoryzacja połączona z informatyką – interesuję się systemami wbudowanymi w nowoczesnych samochodach, diagnostyką komputerową pojazdów oraz elektroniką. Moim celem jest rozwój w branży IT, by w przyszłości tworzyć oprogramowanie wspierające branżę automotive.</p>
+        </section>
 
-header {
-    text-align: center;
-    margin-bottom: 50px;
-    padding-bottom: 30px;
-    border-bottom: 1px solid #eaeaea;
-}
+        <section>
+            <h2>Umiejętności</h2>
+            <ul>
+                <li>Podstawy użytkowania systemu linux</li>
+                <li>Podstawy tworzenia stron WWW (HTML5, CSS3)</li>
+                <li>Znajomość budowy i obsługi komputerowej układów w pojazdach (diagnostyka OBD-II)</li>
+                <li>Obsługa systemów operacyjnych z rodziny Windows i Linux</li>
+                <li>Prawo jazdy kat. B oraz czynne zainteresowanie rynkiem motoryzacyjnym</li>
+            </ul>
+        </section>
 
-h1 {
-    color: #7f1d1d;
-    font-size: 2.5em;
-    font-weight: 800;
-    letter-spacing: -1px;
-    margin-bottom: 15px;
-}
+        <section>
+            <h2>Doświadczenie</h2>
+            <details>
+                <summary>Pracownik Ochrony - Juventus (Biedronka)</summary>
+                <article>
+                    <h3>Pracownik Ochrony - Juventus (Biedronka)</h3>
+                    <p>Okres: 06.2024 - 12.2024</p>
+                    <p>Zapewnienie bezpieczeństwa na terenie obiektu handlowego, monitorowanie systemów CCTV oraz asystowanie pracownikom sklepu w sytuacjach konfliktowych. Praca wymagała skupienia, odpowiedzialności oraz szybkiego reagowania na problemy.</p>
+                </article>
+            </details>
+            <details>
+                <summary>Pracownik Sklepu - Żabka Polska</summary>
+                <article>
+                    <h3>Pracownik Sklepu - Żabka Polska</h3>
+                    <p>Okres: 01.2023 - 05.2024</p>
+                    <p>Obsługa klienta przy kasie fiskalnej, przyjmowanie dostaw, dbanie o ekspozycję towaru oraz utrzymywanie standardów czystości. Nauczyłem się tu pracy pod presją czasu oraz sprawnej komunikacji z klientami.</p>
+                </article>
+            </details>
+        </section>
 
-header img {
-    max-width: 180px;
-    height: auto;
-    border-radius: 0;
-    border: 4px double #b91c1c;
-    margin-top: 10px;
-}
+        <section>
+            <h2>Edukacja</h2>
+            <p>Akademia Finansów i Biznesu Vistula</p>
+            <p>Kierunek: Informatyka</p>
+            <p>Okres: 2025 - obecnie</p>
+        </section>
 
-section {
-    margin-bottom: 40px;
-}
+        <section id="sekcja-projekty">
+            <h2>Projekty</h2>
+            <ul>
+                <li><strong>Osobiste CV (HTML/CSS)</strong>: Moja wizytówka internetowa napisana od zera przy użyciu poprawnych, semantycznych znaczników HTML5.</li>
+                <li><strong>Prosta baza samochodów</strong>: Koncepcyjny projekt katalogu aut, kategoryzujący modele według silników i wyposażenia elektronicznego.</li>
+            </ul>
+        </section>
+        
+    </main>
 
-h2 {
-    color: #b91c1c;
-    font-size: 1.5em;
-    font-weight: 700;
-    margin-bottom: 25px;
-    padding-bottom: 5px;
-    border-left: none;
-    border-bottom: 3px double #b91c1c;
-}
+    <footer>
+        <p>&copy; 2026 Kacper Pietrak. Nr indeksu: 76144.</p>
+        <p style="font-size: 0.8em; margin-top: 10px;">Wyrażam zgodę na przetwarzanie moich danych osobowych w celu rekrutacji zgodnie z art. 6 ust. 1 lit. a Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. (RODO).</p>
+    </footer>
 
-p {
-    margin-bottom: 15px;
-    color: #4a5568;
-}
-
-ul {
-    padding-left: 25px;
-    margin-bottom: 20px;
-    list-style-type: square;
-}
-
-li {
-    margin-bottom: 8px;
-    color: #4a5568;
-}
-
-li strong {
-    color: #2d3748;
-}
-
-details {
-    background-color: #f9fafb;
-    border: 1px solid #fca5a5;
-    border-radius: 0;
-    margin-bottom: 15px;
-    overflow: hidden;
-}
-
-summary {
-    font-size: 1.1em;
-    font-weight: 700;
-    color: #2d3748;
-    padding: 20px;
-    cursor: pointer;
-    list-style: none;
-    outline: none;
-    display: flex;
-    align-items: center;
-    background-color: #fee2e2;
-}
-
-summary::-webkit-details-marker {
-    display: none;
-}
-
-summary::before {
-    content: "▼";
-    color: #b91c1c;
-    font-size: 0.8em;
-    margin-right: 15px;
-    transition: transform 0.3s ease;
-}
-
-details[open] summary::before {
-    transform: rotate(180deg);
-}
-
-article {
-    padding: 0 20px 20px 50px;
-    background-color: #fff;
-}
-
-article h3 {
-    display: none;
-}
-
-article p:first-of-type {
-    font-size: 0.9em;
-    color: #718096;
-    font-weight: 600;
-    margin-bottom: 10px;
-    margin-top: 5px;
-}
-
-footer {
-    text-align: center;
-    font-size: 0.85em;
-    color: #718096;
-    margin-top: 60px;
-    padding: 30px 20px 0;
-    border-top: 1px solid #eaeaea;
-}
-
-a {
-    color: #b91c1c;
-    text-decoration: underline;
-    font-weight: 600;
-    transition: color 0.2s ease;
-}
-
-a:hover {
-    color: #7f1d1d;
-    text-decoration: none;
-}
-
-section p a[href^="mailto:"],
-section p a[href^="tel:"] {
-    background-color: #fee2e2;
-    padding: 3px 8px;
-    border-radius: 0;
-    margin-left: -5px;
-}
-
-@media (max-width: 600px) {
-    body { padding: 10px; }
-    main { padding: 30px 20px; }
-    h1 { font-size: 2em; }
-    h2 { font-size: 1.3em; }
-    article { padding-left: 20px; }
-}
+    <script src="script.js"></script>
+</body>
+</html>
