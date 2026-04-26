@@ -151,6 +151,7 @@ a {
 a:hover {
     color: #7f1d1d;
     text-decoration: none;
+}
 
 section p a[href^="mailto:"],
 section p a[href^="tel:"] {
