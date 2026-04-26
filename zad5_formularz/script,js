@@ -1,113 +1,117 @@
-// ==========================================
-// 1. ZMIANA MOTYWU (RED / GREEN)
-// ==========================================
-const btnTheme = document.getElementById('btn-theme');
-const themeLink = document.getElementById('theme-link');
+// Gwarantuje, że skrypt uruchomi się dopiero po załadowaniu całego HTML
+document.addEventListener('DOMContentLoaded', function() {
 
-if (btnTheme && themeLink) {
-    btnTheme.addEventListener('click', function() {
-        if (themeLink.getAttribute('href') === 'red.css') {
-            themeLink.setAttribute('href', 'green.css');
-        } else {
-            themeLink.setAttribute('href', 'red.css');
-        }
-    });
-}
+    // ==========================================
+    // 1. ZMIANA MOTYWU (RED / GREEN)
+    // ==========================================
+    const btnTheme = document.getElementById('btn-theme');
+    const themeLink = document.getElementById('theme-link');
 
-// ==========================================
-// 2. POKAZYWANIE I UKRYWANIE PROJEKTÓW
-// ==========================================
-const btnToggleProjects = document.getElementById('btn-toggle-projects');
-const sectionProjects = document.getElementById('sekcja-projekty');
+    if (btnTheme && themeLink) {
+        btnTheme.addEventListener('click', function() {
+            if (themeLink.getAttribute('href') === 'red.css') {
+                themeLink.setAttribute('href', 'green.css');
+            } else {
+                themeLink.setAttribute('href', 'red.css');
+            }
+        });
+    }
 
-if (btnToggleProjects && sectionProjects) {
-    btnToggleProjects.addEventListener('click', function() {
-        if (sectionProjects.style.display === 'none') {
-            sectionProjects.style.display = 'block';
-        } else {
-            sectionProjects.style.display = 'none';
-        }
-    });
-}
+    // ==========================================
+    // 2. POKAZYWANIE I UKRYWANIE PROJEKTÓW
+    // ==========================================
+    const btnToggleProjects = document.getElementById('btn-toggle-projects');
+    const sectionProjects = document.getElementById('sekcja-projekty');
 
-// ==========================================
-// 3. WALIDACJA FORMULARZA
-// ==========================================
-const form = document.getElementById('contactForm');
-const successMessage = document.getElementById('success-message');
+    if (btnToggleProjects && sectionProjects) {
+        btnToggleProjects.addEventListener('click', function() {
+            if (sectionProjects.style.display === 'none') {
+                sectionProjects.style.display = 'block';
+            } else {
+                sectionProjects.style.display = 'none';
+            }
+        });
+    }
 
-if (form) {
-    form.addEventListener('submit', function(event) {
-        // Zatrzymujemy domyślne zachowanie (czyli przeładowanie strony)
-        event.preventDefault();
-        
-        // Ukrywamy komunikat sukcesu przy każdej nowej próbie
-        successMessage.style.display = 'none';
+    // ==========================================
+    // 3. WALIDACJA FORMULARZA
+    // ==========================================
+    const form = document.getElementById('contactForm');
+    const successMessage = document.getElementById('success-message');
 
-        // Zmienna śledząca, czy formularz jest wolny od błędów
-        let isValid = true;
-
-        // Pobieramy wartości wpisane przez użytkownika i usuwamy białe znaki
-        const imie = document.getElementById('imie').value.trim();
-        const nazwisko = document.getElementById('nazwisko').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const wiadomosc = document.getElementById('wiadomosc').value.trim();
-
-        // Funkcja pomocnicza do resetowania błędów
-        function clearErrors() {
-            const errors = document.querySelectorAll('.error-message');
-            const inputs = document.querySelectorAll('input, textarea');
-            errors.forEach(error => error.textContent = '');
-            inputs.forEach(input => input.classList.remove('input-error'));
-        }
-
-        // Funkcja pomocnicza do wyświetlania błędu
-        function showError(fieldId, message) {
-            document.getElementById('error-' + fieldId).textContent = message;
-            document.getElementById(fieldId).classList.add('input-error');
-            isValid = false;
-        }
-
-        // Najpierw czyścimy stare błędy
-        clearErrors();
-
-        // Wyrażenia regularne (Regex) do sprawdzeń
-        const containsNumber = /\d/; // Sprawdza czy ciąg zawiera jakąkolwiek cyfrę
-        const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Podstawowe sprawdzanie formatu email
-
-        // 1. Walidacja pola: Imię
-        if (imie === '') {
-            showError('imie', 'Pole imię jest wymagane.');
-        } else if (containsNumber.test(imie)) {
-            showError('imie', 'Imię nie może zawierać cyfr.');
-        }
-
-        // 2. Walidacja pola: Nazwisko
-        if (nazwisko === '') {
-            showError('nazwisko', 'Pole nazwisko jest wymagane.');
-        } else if (containsNumber.test(nazwisko)) {
-            showError('nazwisko', 'Nazwisko nie może zawierać cyfr.');
-        }
-
-        // 3. Walidacja pola: E-mail
-        if (email === '') {
-            showError('email', 'Pole e-mail jest wymagane.');
-        } else if (!validEmail.test(email)) {
-            showError('email', 'Proszę podać poprawny adres e-mail (np. jan@kowalski.pl).');
-        }
-
-        // 4. Walidacja pola: Wiadomość
-        if (wiadomosc === '') {
-            showError('wiadomosc', 'Pole wiadomość jest wymagane.');
-        }
-
-        // Jeśli wszystko jest OK (isValid pozostało true)
-        if (isValid) {
-            // Pokazujemy zielony komunikat na górze
-            successMessage.style.display = 'block';
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            // KLUCZOWE: Zatrzymujemy przeładowanie strony!
+            event.preventDefault();
             
-            // Opcjonalnie: czyścimy formularz po udanym "wysłaniu"
-            form.reset();
-        }
-    });
-}
+            // Ukrywamy komunikat sukcesu przy każdej nowej próbie
+            successMessage.style.display = 'none';
+
+            let isValid = true;
+
+            // Pobieramy pola HTML
+            const inputImie = document.getElementById('imie');
+            const inputNazwisko = document.getElementById('nazwisko');
+            const inputEmail = document.getElementById('email');
+            const inputWiadomosc = document.getElementById('wiadomosc');
+
+            // Pobieramy wartości tekstowe wpisane przez użytkownika
+            const valImie = inputImie.value.trim();
+            const valNazwisko = inputNazwisko.value.trim();
+            const valEmail = inputEmail.value.trim();
+            const valWiadomosc = inputWiadomosc.value.trim();
+
+            // Funkcja do czyszczenia błędów
+            function clearErrors() {
+                document.querySelectorAll('.error-message').forEach(err => err.textContent = '');
+                document.querySelectorAll('input, textarea').forEach(inp => inp.classList.remove('input-error'));
+            }
+
+            // Funkcja do pokazywania błędu
+            function showError(fieldId, message) {
+                document.getElementById('error-' + fieldId).textContent = message;
+                document.getElementById(fieldId).classList.add('input-error');
+                isValid = false;
+            }
+
+            // Najpierw czyścimy stare błędy
+            clearErrors();
+
+            // Reguły (Regex)
+            const containsNumber = /\d/; // Szuka cyfr 0-9
+            const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Format coś@coś.coś
+
+            // 1. Walidacja pola: Imię
+            if (valImie === '') {
+                showError('imie', 'Pole imię jest wymagane.');
+            } else if (containsNumber.test(valImie)) {
+                showError('imie', 'Imię nie może zawierać cyfr!');
+            }
+
+            // 2. Walidacja pola: Nazwisko
+            if (valNazwisko === '') {
+                showError('nazwisko', 'Pole nazwisko jest wymagane.');
+            } else if (containsNumber.test(valNazwisko)) {
+                showError('nazwisko', 'Nazwisko nie może zawierać cyfr!');
+            }
+
+            // 3. Walidacja pola: E-mail
+            if (valEmail === '') {
+                showError('email', 'Pole e-mail jest wymagane.');
+            } else if (!validEmail.test(valEmail)) {
+                showError('email', 'Podaj poprawny adres e-mail (np. abc@def.pl).');
+            }
+
+            // 4. Walidacja pola: Wiadomość
+            if (valWiadomosc === '') {
+                showError('wiadomosc', 'Musisz wpisać wiadomość przed wysłaniem.');
+            }
+
+            // SUKCES - jeśli po wszystkich testach isValid jest nadal true
+            if (isValid) {
+                successMessage.style.display = 'block';
+                form.reset(); // Czyszczenie wpisanych danych z formularza
+            }
+        });
+    }
+});
