@@ -1,65 +1,61 @@
-// 1. ZMIANA MOTYWU
-const btnTheme = document.getElementById('btn-theme');
-const themeLink = document.getElementById('theme-link');
-
-btnTheme?.addEventListener('click', () => {
-    themeLink.setAttribute('href', themeLink.getAttribute('href') === 'red.css' ? 'green.css' : 'red.css');
+// 1. MOTYW I PROJEKTY
+document.getElementById('btn-theme')?.addEventListener('click', () => {
+    const link = document.getElementById('theme-link');
+    link.href = link.href.includes('green.css') ? 'red.css' : 'green.css';
 });
 
-// 2. POKAŻ/UKRYJ PROJEKTY
-const btnToggle = document.getElementById('btn-toggle-projects');
-const sectionProjects = document.getElementById('sekcja-projekty');
-
-btnToggle?.addEventListener('click', () => {
-    sectionProjects.style.display = sectionProjects.style.display === 'none' ? 'block' : 'none';
+document.getElementById('btn-toggle-projects')?.addEventListener('click', () => {
+    const sec = document.getElementById('sekcja-projekty');
+    sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
 });
 
-// 3. WALIDACJA FORMULARZA
+// 2. WALIDACJA FORMULARZA
 const form = document.getElementById('contactForm');
-const successMsg = document.getElementById('success-message');
 
 form?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    successMsg.style.display = 'none';
+    e.preventDefault(); // Blokada wysyłania do backendu
     
     let isValid = true;
-    const fields = ['imie', 'nazwisko', 'email', 'wiadomosc'];
-    
-    // Resetowanie błędów
-    fields.forEach(id => {
-        const input = document.getElementById(id);
-        const error = document.getElementById('error-' + id);
-        input.classList.remove('input-error');
-        if (error) error.textContent = '';
-    });
+    const successMsg = document.getElementById('success-message');
+    successMsg.style.display = 'none';
 
-    const values = {
-        imie: document.getElementById('imie').value.trim(),
-        nazwisko: document.getElementById('nazwisko').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        wiadomosc: document.getElementById('wiadomosc').value.trim()
+    // Pobranie wartości
+    const data = {
+        imie: document.getElementById('imie'),
+        nazwisko: document.getElementById('nazwisko'),
+        email: document.getElementById('email'),
+        wiadomosc: document.getElementById('wiadomosc')
     };
 
-    const showError = (id, msg) => {
-        document.getElementById('error-' + id).textContent = msg;
-        document.getElementById(id).classList.add('input-error');
+    // Reset błędów
+    Object.keys(data).forEach(key => {
+        data[key].classList.remove('input-error');
+        document.getElementById(`error-${key}`).textContent = '';
+    });
+
+    const showError = (key, msg) => {
+        document.getElementById(`error-${key}`).textContent = msg;
+        data[key].classList.add('input-error');
         isValid = false;
     };
 
-    // Walidacja puste pola
-    fields.forEach(id => {
-        if (!values[id]) showError(id, 'To pole jest wymagane.');
+    // WALIDACJA - WYMAGANE
+    Object.keys(data).forEach(key => {
+        if (!data[key].value.trim()) showError(key, 'To pole jest wymagane.');
     });
 
-    // Walidacja cyfry (Imię i Nazwisko)
-    if (values.imie && /\d/.test(values.imie)) showError('imie', 'Imię nie może zawierać cyfr.');
-    if (values.nazwisko && /\d/.test(values.nazwisko)) showError('nazwisko', 'Nazwisko nie może zawierać cyfr.');
+    // WALIDACJA - BRAK CYFR
+    const regexCyfry = /\d/;
+    if (data.imie.value && regexCyfry.test(data.imie.value)) showError('imie', 'Imię nie może zawierać cyfr.');
+    if (data.nazwisko.value && regexCyfry.test(data.nazwisko.value)) showError('nazwisko', 'Nazwisko nie może zawierać cyfr.');
 
-    // Walidacja e-mail
-    if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-        showError('email', 'Niepoprawny format adresu e-mail.');
+    // WALIDACJA - EMAIL
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (data.email.value && !regexEmail.test(data.email.value)) {
+        showError('email', 'Wpisz poprawny adres e-mail.');
     }
 
+    // JEŚLI OK
     if (isValid) {
         successMsg.style.display = 'block';
         form.reset();
