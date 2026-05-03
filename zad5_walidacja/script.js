@@ -98,4 +98,37 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // --- ZADANIE 6: POBIERANIE DANYCH Z JSON ---
+    fetch('data.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Wystąpił błąd podczas pobierania danych');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // 1. Generowanie listy umiejętności
+            const listaUmiejetnosci = document.getElementById('lista-umiejetnosci');
+            if (listaUmiejetnosci) {
+                data.umiejetnosci.forEach(umiejetnosc => {
+                    const li = document.createElement('li');
+                    li.textContent = umiejetnosc;
+                    listaUmiejetnosci.appendChild(li);
+                });
+            }
+
+            // 2. Generowanie listy projektów
+            const listaProjekty = document.getElementById('lista-projekty');
+            if (listaProjekty) {
+                data.projekty.forEach(projekt => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${projekt.tytul}</strong>: ${projekt.opis}`;
+                    listaProjekty.appendChild(li);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Błąd pobierania JSON:', error);
+        });
 });
