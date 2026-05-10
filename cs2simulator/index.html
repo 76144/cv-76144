@@ -21,19 +21,18 @@
     <main>
         <section id="view-cases" class="view active">
             <div class="hero">
-                <div class="hero-content">
-                    <h2>Wybierz skrzynkę do otwarcia</h2>
-                </div>
+                <h2>Wybierz skrzynkę do otwarcia</h2>
             </div>
-            <div class="cases-grid" id="casesGrid"></div>
+            <div class="cases-grid" id="casesGrid">
+                </div>
         </section>
 
         <section id="view-opening" class="view">
             <button class="back-btn" onclick="switchTab('cases')">&lt; Powrót do skrzynek</button>
             
             <div class="case-header">
-                <h2 id="openingCaseName">👑 Nature Case</h2>
-                <p class="case-price-subtitle" id="openingCasePriceStr">2,30zł</p>
+                <h2 id="openingCaseName">Nazwa Skrzynki</h2>
+                <p class="case-price-subtitle" id="openingCasePriceStr">0,00zł</p>
             </div>
             
             <div class="roulette-wrapper">
@@ -51,7 +50,7 @@
                     <button disabled>🔒 4</button>
                     <button disabled>🔒 5</button>
                 </div>
-                <button id="openCaseBtn" class="main-open-btn">Otwórz za <span id="openingCasePriceBtn">2,30</span>zł</button>
+                <button id="openCaseBtn" class="main-open-btn">Otwórz za <span id="openingCasePriceBtn">0,00</span>zł</button>
                 <div class="extra-toggles">
                     <button>👑</button>
                     <button>⚡</button>
@@ -75,7 +74,8 @@
                     <button class="sell-all-btn" onclick="sellAll()">Sprzedaj wszystko</button>
                 </div>
             </div>
-            <div class="inventory-grid" id="inventoryGrid"></div>
+            <div class="contents-grid-new" id="inventoryGrid">
+                </div>
         </section>
     </main>
 
