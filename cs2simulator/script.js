@@ -3,7 +3,7 @@ let inventory = [];
 let currentCase = null;
 let isSpinning = false;
 
-// BAZA DANYCH WZOROWANA NA SCREENIE
+// BAZA SKRZYNEK
 const casesData = [
     {
         id: 'nature',
@@ -16,27 +16,43 @@ const casesData = [
             { name: 'Chemical Green', weapon: 'PP-Bizon', price: 20.52, chance: 1.000, rarity: '#d32ce6', wear: 'BS', wearColor: '#ef4444', img: 'https://placehold.co/150x100/1e293b/fff?text=Bizon' },
             { name: 'Nuclear Garden', weapon: 'Glock-18', price: 10.77, chance: 5.000, rarity: '#8847ff', wear: 'BS', wearColor: '#ef4444', img: 'https://placehold.co/150x100/1e293b/fff?text=Glock-18' },
             { name: 'Emphorosaur-S', weapon: 'M4A1-S', price: 6.69, chance: 2.000, rarity: '#8847ff', wear: 'MW', wearColor: '#3b82f6', img: 'https://placehold.co/150x100/1e293b/fff?text=M4A1-S' },
-            { name: 'Pit Viper', weapon: 'AWP', price: 6.05, chance: 2.000, rarity: '#8847ff', wear: 'BS', wearColor: '#ef4444', img: 'https://placehold.co/150x100/1e293b/fff?text=AWP' },
-            { name: 'Atheris', weapon: 'AWP', price: 2.50, chance: 4.000, rarity: '#4b69ff', wear: 'FN', wearColor: '#22c55e', img: 'https://placehold.co/150x100/1e293b/fff?text=AWP' },
-            { name: 'Jungle Slipstream', weapon: 'M4A4', price: 1.10, chance: 84.900, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://placehold.co/150x100/1e293b/fff?text=M4A4' }
+            { name: 'Atheris', weapon: 'AWP', price: 2.50, chance: 5.000, rarity: '#4b69ff', wear: 'FN', wearColor: '#22c55e', img: 'https://placehold.co/150x100/1e293b/fff?text=AWP' },
+            { name: 'Jungle Slipstream', weapon: 'M4A4', price: 1.10, chance: 85.900, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://placehold.co/150x100/1e293b/fff?text=M4A4' }
+        ]
+    },
+    {
+        id: 'rain',
+        name: 'Rain Case',
+        price: 3.10,
+        img: 'https://placehold.co/150x150/1e293b/3b82f6?text=Rain\nCase',
+        items: [
+            { name: 'Water Elemental', weapon: 'Glock-18', price: 25.00, chance: 2.000, rarity: '#d32ce6', wear: 'FN', wearColor: '#22c55e', img: 'https://placehold.co/150x100/1e293b/fff?text=Glock' },
+            { name: 'Blue Laminate', weapon: 'AK-47', price: 15.00, chance: 8.000, rarity: '#8847ff', wear: 'MW', wearColor: '#3b82f6', img: 'https://placehold.co/150x100/1e293b/fff?text=AK-47' },
+            { name: 'Cyanospatter', weapon: 'CZ75-Auto', price: 2.00, chance: 90.000, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://placehold.co/150x100/1e293b/fff?text=CZ75' }
         ]
     }
 ];
 
-const balanceEl = document.getElementById('balance');
-const casesGrid = document.getElementById('casesGrid');
-const inventoryGrid = document.getElementById('inventoryGrid');
-const rouletteStrip = document.getElementById('rouletteStrip');
-
+// ZMIANA ZAKŁADEK (Poprawiona, żeby na 100% ukrywała inne strony)
 function switchTab(tabId) {
     if (isSpinning) return;
-    document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+    
+    // Ukryj wszystkie sekcje
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.remove('active');
+    });
+    
+    // Pokaz wybrana
     document.getElementById(`view-${tabId}`).classList.add('active');
+    
     if(tabId === 'inventory') renderInventory();
 }
 
 function init() {
     updateBalance();
+    const casesGrid = document.getElementById('casesGrid');
+    casesGrid.innerHTML = '';
+    
     casesData.forEach(c => {
         const card = document.createElement('div');
         card.className = 'case-card';
@@ -51,7 +67,7 @@ function init() {
 }
 
 function updateBalance() {
-    balanceEl.innerText = balance.toFixed(2);
+    document.getElementById('balance').innerText = balance.toFixed(2);
 }
 
 function setupCaseOpening(caseObj) {
@@ -62,7 +78,6 @@ function setupCaseOpening(caseObj) {
     
     document.getElementById('openCaseBtn').onclick = () => spinRoulette();
     
-    // Generowanie siatki zawartości (jak na screenie)
     const contentsGrid = document.getElementById('caseContentsGrid');
     contentsGrid.innerHTML = '';
     caseObj.items.forEach(item => {
@@ -80,6 +95,7 @@ function setupCaseOpening(caseObj) {
         `;
     });
 
+    const rouletteStrip = document.getElementById('rouletteStrip');
     rouletteStrip.style.transition = 'none';
     rouletteStrip.style.transform = 'translateX(0)';
     rouletteStrip.innerHTML = ''; 
@@ -111,6 +127,7 @@ function spinRoulette() {
     btn.disabled = true;
 
     const wonItem = getRolledItem(currentCase.items);
+    const rouletteStrip = document.getElementById('rouletteStrip');
     rouletteStrip.innerHTML = '';
     
     const totalItemsInStrip = 70;
@@ -128,12 +145,11 @@ function spinRoulette() {
 
     rouletteStrip.style.transition = 'none';
     rouletteStrip.style.transform = 'translateX(0)';
-    rouletteStrip.offsetHeight; 
+    rouletteStrip.offsetHeight; // trigger reflow
 
-    // Szerokość itemu to 150px (140px + 10px margin)
     const itemWidth = 150; 
     const containerWidth = document.querySelector('.roulette-window').offsetWidth;
-    const randomOffset = Math.floor(Math.random() * 120) - 60; // Offset wewnątrz ramki
+    const randomOffset = Math.floor(Math.random() * 120) - 60; 
     const stopPosition = (winningIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2) + randomOffset;
 
     rouletteStrip.style.transition = 'transform 6s cubic-bezier(0.15, 0.05, 0.1, 1)';
@@ -143,17 +159,18 @@ function spinRoulette() {
         isSpinning = false;
         btn.disabled = false;
         inventory.push({ ...wonItem, uniqueId: Date.now() + Math.random() });
-        // alert(`Trafiłeś: ${wonItem.weapon} | ${wonItem.name} (${wonItem.wear}) za ${wonItem.price.toFixed(2)}zł!`);
     }, 6500);
 }
 
 function renderInventory() {
+    const inventoryGrid = document.getElementById('inventoryGrid');
     inventoryGrid.innerHTML = '';
+    
     const total = inventory.reduce((sum, item) => sum + item.price, 0);
     document.getElementById('totalValue').innerText = total.toFixed(2) + ' zł';
 
     if(inventory.length === 0) {
-        inventoryGrid.innerHTML = '<p style="color: #94a3b8; grid-column: 1/-1; text-align: center;">Twój ekwipunek jest pusty.</p>';
+        inventoryGrid.innerHTML = '<p style="color: #94a3b8; grid-column: 1/-1; text-align: center; margin-top: 20px;">Twój ekwipunek jest pusty.</p>';
         return;
     }
 
@@ -164,10 +181,10 @@ function renderInventory() {
         card.innerHTML = `
             <div class="badge-wear" style="background: ${item.wearColor}">${item.wear}</div>
             <img src="${item.img}" class="content-img">
-            <div class="content-info" style="text-align: center;">
+            <div class="content-info">
                 <p class="content-name">${item.name}</p>
                 <p class="content-weapon">${item.weapon}</p>
-                <div class="content-price">${item.price.toFixed(2)}zł</div>
+                <div class="content-price" style="margin-bottom: 10px;">${item.price.toFixed(2)}zł</div>
                 <button class="sell-btn" onclick="sellItem('${item.uniqueId}', ${item.price})">Sprzedaj</button>
             </div>
         `;
@@ -191,4 +208,5 @@ window.sellAll = function() {
     renderInventory();
 }
 
-init();
+// Uruchom stronę startową po załadowaniu
+document.addEventListener('DOMContentLoaded', init);
