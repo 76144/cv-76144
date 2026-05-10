@@ -1,10 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // --- MOTYW: Przełączanie i Local Storage ---
     const btnTheme = document.getElementById('btn-theme');
     const themeLink = document.getElementById('theme-link');
 
-    // Odczyt zapisanego motywu przy starcie strony
     const savedTheme = localStorage.getItem('user_theme');
     if (savedTheme && themeLink) {
         themeLink.setAttribute('href', savedTheme);
@@ -16,11 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
             let newTheme = (currentTheme === 'red.css') ? 'green.css' : 'red.css';
             
             themeLink.setAttribute('href', newTheme);
-            localStorage.setItem('user_theme', newTheme); // Zapis do localStorage
+            localStorage.setItem('user_theme', newTheme);
         });
     }
 
-    // --- PROJEKTY: Pokaż/Ukryj ---
     const btnToggleProjects = document.getElementById('btn-toggle-projects');
     const sectionProjects = document.getElementById('sekcja-projekty');
 
@@ -30,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- FORMULARZ: Walidacja ---
     const form = document.getElementById('contactForm');
     const successMessage = document.getElementById('success-message');
 
@@ -40,9 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (successMessage) successMessage.style.display = 'none';
 
             let isValid = true;
-            const fields = ['imie', 'nazwisko', 'email', 'wiadomosc'];
             
-            // Czyszczenie błędów
             document.querySelectorAll('.error-message').forEach(err => err.textContent = '');
             document.querySelectorAll('input, textarea').forEach(inp => inp.classList.remove('input-error'));
 
@@ -91,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- JSON: Pobieranie danych (Zadanie 6) ---
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
@@ -115,23 +107,19 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => console.error('Błąd JSON:', err));
 
-    // --- ZADANIE 7: Notatki w Local Storage ---
     const btnAddNote = document.getElementById('btn-dodaj-notatke');
     const inputNote = document.getElementById('nowa-notatka');
     const notesList = document.getElementById('lista-notatek');
 
-    // Funkcja pobierająca tablicę z localStorage
     function getNotes() {
         const stored = localStorage.getItem('user_notes');
         return stored ? JSON.parse(stored) : [];
     }
 
-    // Funkcja zapisująca tablicę do localStorage
     function saveNotes(notes) {
         localStorage.setItem('user_notes', JSON.stringify(notes));
     }
 
-    // Funkcja wyświetlająca notatki na stronie
     function renderNotes() {
         if (!notesList) return;
         notesList.innerHTML = '';
@@ -148,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
             btnDel.textContent = 'Usuń';
             btnDel.style.cssText = 'padding:4px 8px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:0.8em;';
             
-            // Usuwanie elementu
             btnDel.onclick = () => {
                 const current = getNotes();
                 current.splice(index, 1);
@@ -167,14 +154,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const val = inputNote.value.trim();
             if (val) {
                 const current = getNotes();
-                current.push(val); // Dodanie elementu
-                saveNotes(current); // Zapis do localStorage
+                current.push(val);
+                saveNotes(current);
                 inputNote.value = '';
-                renderNotes(); // Widoczne działanie
+                renderNotes();
             }
         });
 
-        // Wywołanie przy starcie (Odczyt po odświeżeniu)
         renderNotes();
     }
 });
