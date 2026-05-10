@@ -4,9 +4,6 @@ let currentCase = null;
 let isSpinning = false;
 let openQuantity = 1;
 
-// Niezawodny fallback, gdyby cokolwiek ze Steamem nadal szwankowało
-const getFallbackImage = (text) => `https://placehold.co/150x100/1e293b/06b6d4?text=${encodeURIComponent(text)}`;
-
 // BAZA DANYCH - PRAWDZIWA EKONOMIA CS2
 const casesData = [
     {
@@ -60,6 +57,15 @@ const casesData = [
     }
 ];
 
+// OTO GŁÓWNA NAPRAWA ZDJĘĆ - Przepuszczamy wszystkie linki przez darmowe Proxy (wsrv.nl)
+// Steam myśli, że to Proxy pobiera obrazek, a nie nasza strona internetowa.
+casesData.forEach(c => {
+    c.img = `https://wsrv.nl/?url=${encodeURIComponent(c.img)}`;
+    c.items.forEach(item => {
+        item.img = `https://wsrv.nl/?url=${encodeURIComponent(item.img)}`;
+    });
+});
+
 function switchTab(tabId) {
     if (isSpinning) return;
     document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
@@ -76,9 +82,8 @@ function init() {
         const card = document.createElement('div');
         card.className = 'case-card';
         card.onclick = () => setupCaseOpening(c);
-        // Zabezpieczenie na onerror
         card.innerHTML = `
-            <img src="${c.img}" class="case-img" onerror="this.onerror=null; this.src='${getFallbackImage(c.name)}'">
+            <img src="${c.img}" class="case-img">
             <h3>${c.name}</h3>
             <p style="color: var(--accent); font-weight: bold;">${c.price.toFixed(2)} zł</p>
         `;
@@ -115,7 +120,7 @@ function setupCaseOpening(caseObj) {
             <div class="content-card" style="border-top-color: ${item.rarity}">
                 <div class="badge-wear" style="background: ${item.wearColor}">${item.wear}</div>
                 <div class="badge-chance">${item.chance.toFixed(3)}%</div>
-                <img src="${item.img}" class="content-img" onerror="this.onerror=null; this.src='${getFallbackImage(item.weapon)}'">
+                <img src="${item.img}" class="content-img">
                 <div class="content-info">
                     <p class="content-name">${item.name}</p>
                     <p class="content-weapon">${item.weapon}</p>
@@ -161,7 +166,7 @@ function showResultModal(wonItems, totalCost) {
         totalValue += item.price;
         itemsContainer.innerHTML += `
             <div class="modal-item" style="border-bottom-color: ${item.rarity}">
-                <img src="${item.img}" onerror="this.onerror=null; this.src='${getFallbackImage(item.weapon)}'">
+                <img src="${item.img}">
                 <p>${item.weapon} | ${item.name}</p>
                 <span>${item.price.toFixed(2)} zł</span>
             </div>
@@ -227,7 +232,7 @@ function spinRoulette() {
             let displayItem = (i === winningIndex) ? wonItem : currentCase.items[Math.floor(Math.random() * currentCase.items.length)];
             rouletteStrip.innerHTML += `
                 <div class="roulette-item" style="border-bottom-color: ${displayItem.rarity}">
-                    <img src="${displayItem.img}" onerror="this.onerror=null; this.src='${getFallbackImage(displayItem.weapon)}'">
+                    <img src="${displayItem.img}">
                 </div>
             `;
         }
@@ -271,7 +276,7 @@ function spinRoulette() {
             setTimeout(() => {
                 fastContainer.innerHTML += `
                     <div class="fast-open-item" style="border-bottom-color: ${item.rarity}">
-                        <img src="${item.img}" onerror="this.onerror=null; this.src='${getFallbackImage(item.weapon)}'">
+                        <img src="${item.img}">
                     </div>
                 `;
             }, index * 100); 
@@ -303,7 +308,7 @@ function renderInventory() {
         card.style.borderTopColor = item.rarity;
         card.innerHTML = `
             <div class="badge-wear" style="background: ${item.wearColor}">${item.wear}</div>
-            <img src="${item.img}" class="content-img" onerror="this.onerror=null; this.src='${getFallbackImage(item.weapon)}'">
+            <img src="${item.img}" class="content-img">
             <div class="content-info">
                 <p class="content-name">${item.name}</p>
                 <p class="content-weapon">${item.weapon}</p>
