@@ -1,14 +1,6 @@
-:root {
-    --bg-color: #070914;
-    --card-bg: #121526;
-    --accent: #06b6d4;
-    --text: #ffffff;
-    --border: #1e293b;
-}
-
+:root { --bg-color: #070914; --card-bg: #121526; --accent: #06b6d4; --text: #ffffff; --border: #1e293b; }
 body { margin: 0; background-color: var(--bg-color); color: var(--text); font-family: 'Segoe UI', sans-serif; }
-.view { display: none !important; }
-.view.active { display: block !important; animation: fadeIn 0.3s ease-in-out; }
+.view { display: none !important; } .view.active { display: block !important; animation: fadeIn 0.3s ease-in-out; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background-color: var(--card-bg); border-bottom: 1px solid var(--border); }
@@ -37,18 +29,20 @@ main { padding: 40px 5%; overflow: hidden; }
 .roulette-item { width: 140px; height: 130px; margin: 0 5px; background: rgba(30, 41, 59, 0.4); border-radius: 8px; display: flex; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.05); border-bottom: 3px solid; }
 .roulette-item img { width: 110px; height: 80px; object-fit: contain; }
 
-/* STYLE DLA HURTOWEGO OTWIERANIA */
 .fast-open-results { display: none; width: 100%; height: 100%; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px; box-sizing: border-box; overflow-y: auto; }
-.fast-open-item { width: 100px; height: 100px; background: var(--card-bg); border-bottom: 3px solid; border-radius: 8px; display: flex; justify-content: center; align-items: center; position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; transform: scale(0.5); }
+.fast-open-item { width: 100px; height: 100px; background: var(--card-bg); border-bottom: 3px solid; border-radius: 8px; display: flex; justify-content: center; align-items: center; position: relative; animation: popIn 0.3s forwards; opacity: 0; transform: scale(0.5); }
 .fast-open-item img { width: 80px; height: 60px; object-fit: contain; }
 @keyframes popIn { to { opacity: 1; transform: scale(1); } }
 
-.case-controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; }
-.multi-open button { background: #1e293b; border: none; color: white; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; border-radius: 50%; }
+/* POPRAWIONE PRZYCISKI - Wymuszenie wierzchu (z-index) i klikalności */
+.case-controls-wrapper { position: relative; z-index: 50; display: flex; justify-content: center; margin-top: 20px; pointer-events: auto; }
+.case-controls { display: flex; align-items: center; gap: 15px; }
+.multi-open { display: flex; gap: 5px; }
+.multi-open button { background: #1e293b; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-weight: bold; transition: 0.2s; position: relative; z-index: 51;}
 .multi-open button.active { background: var(--accent); color: #000; }
-.main-open-btn { background: var(--accent); color: #000; border: none; padding: 15px 40px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-.main-open-btn:hover { background: #0891b2; color: white; }
-.main-open-btn:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; }
+.main-open-btn { background: var(--accent); color: #000; border: none; padding: 15px 40px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; position: relative; z-index: 51;}
+.main-open-btn:hover { background: #0891b2; color: white; transform: scale(1.02); }
+.main-open-btn:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; transform: none; }
 
 .contents-title { text-align: center; margin-top: 40px; margin-bottom: 20px; }
 .contents-grid-new { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
@@ -66,3 +60,17 @@ main { padding: 40px 5%; overflow: hidden; }
 .sell-all-btn { background: #dc2626; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 .sell-btn { width: 100%; padding: 8px; background: #dc2626; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; transition: 0.2s;}
 .sell-btn:hover { background: #b91c1c; }
+
+/* STYLE DLA OKIENKA POWIADOMIENIA (MODAL) */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+.modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
+.modal-content { background: var(--card-bg); border: 1px solid var(--border); padding: 30px; border-radius: 12px; text-align: center; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.modal-items-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px 0; }
+.modal-item { background: rgba(30, 41, 59, 0.4); padding: 10px; border-radius: 8px; border-bottom: 3px solid; width: 120px; }
+.modal-item img { width: 100px; height: 70px; object-fit: contain; }
+.modal-item p { font-size: 12px; font-weight: bold; margin: 5px 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.modal-item span { font-size: 11px; color: var(--accent); }
+.modal-summary { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; border-left: 4px solid var(--accent); }
+.modal-summary p { margin: 5px 0; font-size: 14px; }
+.modal-close-btn { background: var(--accent); color: #000; border: none; padding: 12px 40px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
+.modal-close-btn:hover { background: #0891b2; color: white; }
