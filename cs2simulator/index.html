@@ -42,15 +42,17 @@
                 </div>
             </div>
             
-            <div class="case-controls">
-                <div class="multi-open">
-                    <button class="active" onclick="setQuantity(1, this)">1</button>
-                    <button onclick="setQuantity(2, this)">2</button>
-                    <button onclick="setQuantity(3, this)">3</button>
-                    <button onclick="setQuantity(5, this)">5</button>
-                    <button onclick="setQuantity(10, this)">10</button>
+            <div class="case-controls-wrapper">
+                <div class="case-controls">
+                    <div class="multi-open">
+                        <button class="active" onclick="setQuantity(1, this)">1</button>
+                        <button onclick="setQuantity(2, this)">2</button>
+                        <button onclick="setQuantity(3, this)">3</button>
+                        <button onclick="setQuantity(5, this)">5</button>
+                        <button onclick="setQuantity(10, this)">10</button>
+                    </div>
+                    <button id="openCaseBtn" class="main-open-btn">Otwórz za <span id="openingCasePriceBtn">0,00</span>zł</button>
                 </div>
-                <button id="openCaseBtn" class="main-open-btn">Otwórz za <span id="openingCasePriceBtn">0,00</span>zł</button>
             </div>
 
             <h3 class="contents-title">Zawartość skrzynki</h3>
@@ -68,6 +70,15 @@
             <div class="contents-grid-new" id="inventoryGrid"></div>
         </section>
     </main>
+
+    <div id="resultModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Wynik otwarcia</h2>
+            <div id="modalItems" class="modal-items-grid"></div>
+            <div class="modal-summary" id="modalSummary"></div>
+            <button class="modal-close-btn" onclick="closeModal()">OK</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
