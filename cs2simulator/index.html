@@ -29,33 +29,53 @@
         </section>
 
         <section id="view-opening" class="view">
-            <button class="back-btn" onclick="switchTab('cases')">← Wróć do skrzynek</button>
-            <h2 id="openingCaseName" style="text-align: center; margin-bottom: 20px;">Nazwa Skrzynki</h2>
+            <button class="back-btn" onclick="switchTab('cases')">&lt; Powrót do skrzynek</button>
             
-            <div class="roulette-container">
-                <div class="roulette-line"></div>
-                <div class="roulette-strip" id="rouletteStrip">
-                    </div>
+            <div class="case-header">
+                <h2 id="openingCaseName">👑 Nature Case</h2>
+                <p class="case-price-subtitle" id="openingCasePriceStr">2,30zł</p>
             </div>
             
-            <div style="text-align: center; margin: 30px 0;">
-                <button id="openCaseBtn" class="open-btn">OTWÓRZ (<span id="openingCasePrice">0.00</span> zł)</button>
+            <div class="roulette-wrapper">
+                <div class="roulette-window">
+                    <div class="roulette-selector"></div>
+                    <div class="roulette-strip" id="rouletteStrip"></div>
+                </div>
+            </div>
+            
+            <div class="case-controls">
+                <div class="multi-open">
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button>3</button>
+                    <button disabled>🔒 4</button>
+                    <button disabled>🔒 5</button>
+                </div>
+                <button id="openCaseBtn" class="main-open-btn">Otwórz za <span id="openingCasePriceBtn">2,30</span>zł</button>
+                <div class="extra-toggles">
+                    <button>👑</button>
+                    <button>⚡</button>
+                    <button>🔊</button>
+                </div>
             </div>
 
-            <h3>Zawartość skrzynki:</h3>
-            <div class="contents-grid" id="caseContentsGrid"></div>
+            <div class="battle-btn-wrapper">
+                <button class="battle-btn">+ Stwórz Case Battle z tą skrzynką</button>
+            </div>
+
+            <h3 class="contents-title">Zawartość skrzynki</h3>
+            <div class="contents-grid-new" id="caseContentsGrid"></div>
         </section>
 
         <section id="view-inventory" class="view">
             <div class="inventory-header">
                 <h2>Twój Ekwipunek</h2>
                 <div class="inventory-stats">
-                    <span>Łączna wartość: <b id="totalValue" style="color: #22c55e;">0.00 zł</b></span>
+                    <span>Łączna wartość: <b id="totalValue" style="color: #06b6d4;">0.00 zł</b></span>
                     <button class="sell-all-btn" onclick="sellAll()">Sprzedaj wszystko</button>
                 </div>
             </div>
-            <div class="inventory-grid" id="inventoryGrid">
-                </div>
+            <div class="inventory-grid" id="inventoryGrid"></div>
         </section>
     </main>
 
