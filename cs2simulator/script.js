@@ -2,23 +2,18 @@ let balance = 1000.00;
 let inventory = [];
 let currentCase = null;
 let isSpinning = false;
-let openQuantity = 1; // Zmienna do obsługi wielu skrzynek
+let openQuantity = 1;
 
-// BAZA DANYCH Z PRAWDZIWYMI ZDJĘCIAMI ZE STEAM
 const casesData = [
     {
-        id: 'nature',
-        name: 'Nature Case',
-        price: 2.30,
-        img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsQEl9Jg9SpIW1Kgx00vHKeWwS74ywwdLcz6-tZuzRzjMF68Ymi7CTrd7xiVG180E_N2zzJYSWIw9pZw/200fx185f', // Zastępcza skrzynka Chroma
+        id: 'rain',
+        name: 'Rain Case',
+        price: 3.10,
+        img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsQEl9Jg9SpIW1Kgx00vHKeWwS74ywwdLcz6-tZuzRzjMF68Ymi7CTrd7xiVG180E_N2zzJYSWIw9pZw/200fx185f',
         items: [
-            { name: 'Atheris', weapon: 'AWP', price: 73.72, chance: 0.100, rarity: '#eb4b4b', wear: 'WW', wearColor: '#f59e0b', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot621FAR17PLfYQJD_9W7m5a0mvLwOq7c2G5SvcYkiLqYrYit2wXnqRVsZ2r3II_AJ1Q8aAnV_ALqk7jsgJHp7pydwGwj5Hce1vM_/200fx185f' },
-            { name: 'Ice Coaled', weapon: 'AK-47', price: 29.05, chance: 1.000, rarity: '#d32ce6', wear: 'BS', wearColor: '#ef4444', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV08y5nY6fqPv9NLPF2DwEuMQn2rnEptz2iVLt-BdkamH2J9OQd1I5aAvZ_1Xok-jn18Xv75-bzSB9-n51rA9aXqc/200fx185f' },
-            { name: 'Chemical Green', weapon: 'PP-Bizon', price: 20.52, chance: 1.000, rarity: '#d32ce6', wear: 'BS', wearColor: '#ef4444', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpotWPyaA_xrqvOaCdOwN24mZSVqfbnNrfXlwH1N2vUo4K4jDqu-EVkZDumLNTDJgE7YluCrlS-wb261sLpuJnAznIx-z-DyLw9z4Vb/200fx185f' },
-            { name: 'Nuclear Garden', weapon: 'Glock-18', price: 10.77, chance: 5.000, rarity: '#8847ff', wear: 'BS', wearColor: '#ef4444', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposbaqKAxf0v73cC9b49-zlZWSqPv9NLPF2DwDsJN12bHHoYij3QK280E_ZmDzJoDGIQA_Zw2F_we2x7_o0MO0uJ_LznA3vyIm-z-DyDC2-6Ld/200fx185f' },
-            { name: 'Emphorosaur-S', weapon: 'M4A1-S', price: 6.69, chance: 2.000, rarity: '#8847ff', wear: 'MW', wearColor: '#3b82f6', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou-6kejhjxszJemkV09K_k4iYmfbLP7LWnn8f65Nw2-qSp9im2Fbm-EE-amjxdYSdIFA8Nl6G8wa9krjt15ftupXKyiQ3inMj-z-DyB-yP68q/200fx185f' },
-            { name: 'Pit Viper', weapon: 'AWP', price: 6.05, chance: 2.000, rarity: '#8847ff', wear: 'BS', wearColor: '#ef4444', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot621FAR17PB3OQJD_9W7m5a0n_L1JaKfzzgA7MByi-uToY723Fbj-0Y4MmGmItCWcwNqMw2FqVW5wevv15a9vJrAyCEx7HJwtn_D30vgXSEHnS4/200fx185f' },
-            { name: 'Jungle Slipstream', weapon: 'M4A4', price: 1.10, chance: 88.900, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou-6kejhoyszMfjxW09--m5qCnfvxMIfBmlRc7cF4n-SPrtz32wLk-EBsZGH0ddDAdVRrNA6Cq1Hvk-_r0JK4upTN1zI97Q8H1bE_/200fx185f' }
+            { name: 'Water Elemental', weapon: 'Glock-18', price: 25.00, chance: 2.000, rarity: '#d32ce6', wear: 'FN', wearColor: '#22c55e', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposbaqKAxf0v73daNxu-OwmImYqP_LPr7Vn35cpsB_jrnAooiti1flrUY-ZG71d47BIlBsYVrRqVK9w7u7jcPtupnAzyA2uD5iuyjL7lU/200fx185f' },
+            { name: 'Blue Laminate', weapon: 'AK-47', price: 15.00, chance: 8.000, rarity: '#8847ff', wear: 'MW', wearColor: '#3b82f6', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhnwMzJemkV09m7hJKZh_vxIYTOkV_Dk1RCz_rB8tiijVW78kJpMm3yIdCQcFdsNQnR_lTsl--8gZK_6szPziM2sCkg5HfdmxS1gR4fO_sv26IBZ-5_nQ/200fx185f' },
+            { name: 'Cyanospatter', weapon: 'CZ75-Auto', price: 2.00, chance: 90.000, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpouNWzKARY3MzJbjdJ09-5hM-IkvfLJ77DqWdY781lxOiSotj2jgft8xVqa2v6IYKRIFU7ZAmBqFa-xe-9gsXt7syfwWwj5HeR_-VwCA/200fx185f' }
         ]
     }
 ];
@@ -52,24 +47,20 @@ function updateBalance() {
     document.getElementById('balance').innerText = balance.toFixed(2);
 }
 
-// Obsługa przycisków wielokrotnego wyboru (1, 2, 3, 5, 10)
+// Zmiana ilości skrzynek do otwarcia
 window.setQuantity = function(q, btnElement) {
     if (isSpinning) return;
     openQuantity = q;
     
-    // Zmiana kolorów przycisków
     document.querySelectorAll('.multi-open button').forEach(b => b.classList.remove('active'));
     btnElement.classList.add('active');
     
-    // Aktualizacja ceny na przycisku
     document.getElementById('openingCasePriceBtn').innerText = (currentCase.price * openQuantity).toFixed(2);
 }
 
 function setupCaseOpening(caseObj) {
     currentCase = caseObj;
-    
-    // Reset ilości do 1 za każdym wejściem
-    setQuantity(1, document.querySelector('.multi-open button'));
+    setQuantity(1, document.querySelector('.multi-open button')); // Zawsze wraca do "1" po wejściu
 
     document.getElementById('openingCaseName').innerText = `👑 ${caseObj.name}`;
     document.getElementById('openingCasePriceStr').innerText = `${caseObj.price.toFixed(2)}zł`;
@@ -93,7 +84,6 @@ function setupCaseOpening(caseObj) {
         `;
     });
 
-    // Reset ruletki
     document.getElementById('rouletteStrip').style.display = 'flex';
     document.getElementById('rouletteSelector').style.display = 'block';
     document.getElementById('fastOpenResults').style.display = 'none';
@@ -114,9 +104,61 @@ function getRolledItem(items) {
     return items[items.length - 1]; 
 }
 
-// Funkcja generująca super-bezpieczne ID jako czysty tekst (zapobiega bugowi ze sprzedażą)
 function generateSafeId() {
     return 'item_' + Date.now().toString() + '_' + Math.random().toString(36).substring(2, 9);
+}
+
+// LOGIKA NOWEGO MODALU Z PODSUMOWANIEM
+function showResultModal(wonItems, totalCost) {
+    const modal = document.getElementById('resultModal');
+    const itemsContainer = document.getElementById('modalItems');
+    const summary = document.getElementById('modalSummary');
+
+    itemsContainer.innerHTML = '';
+    let totalValue = 0;
+
+    // Generowanie kart przedmiotów w oknie
+    wonItems.forEach(item => {
+        totalValue += item.price;
+        itemsContainer.innerHTML += `
+            <div class="modal-item" style="border-bottom-color: ${item.rarity}">
+                <img src="${item.img}">
+                <p>${item.weapon} | ${item.name}</p>
+                <span>${item.price.toFixed(2)} zł</span>
+            </div>
+        `;
+    });
+
+    // Obliczanie zysku/straty
+    const profit = totalValue - totalCost;
+    let profitText = '';
+    let profitColor = '';
+
+    if (profit > 0) {
+        profitText = `Jesteś na plus ${profit.toFixed(2)} zł! 🤑`;
+        profitColor = '#22c55e'; // Zielony
+    } else if (profit < 0) {
+        profitText = `Jesteś stratny ${Math.abs(profit).toFixed(2)} zł. 📉`;
+        profitColor = '#ef4444'; // Czerwony
+    } else {
+        profitText = `Wyszedłeś na zero. ⚖️`;
+        profitColor = '#94a3b8'; // Szary
+    }
+
+    // Podsumowanie tekstowe
+    summary.innerHTML = `
+        <p>Wydano na klucze/skrzynki: <b style="color: #ef4444">${totalCost.toFixed(2)} zł</b></p>
+        <p>Łączna wartość zdobytych przedmiotów: <b style="color: #22c55e">${totalValue.toFixed(2)} zł</b></p>
+        <p style="color: ${profitColor}; font-size: 18px; font-weight: bold; margin-top: 15px;">${profitText}</p>
+    `;
+
+    // Pokazanie okna
+    modal.classList.add('active');
+}
+
+// Zamknięcie modalu
+window.closeModal = function() {
+    document.getElementById('resultModal').classList.remove('active');
 }
 
 function spinRoulette() {
@@ -134,7 +176,6 @@ function spinRoulette() {
     const btn = document.getElementById('openCaseBtn');
     btn.disabled = true;
 
-    // OTWIERANIE 1 SKRZYNKI (Zwykła animacja)
     if (openQuantity === 1) {
         document.getElementById('fastOpenResults').style.display = 'none';
         document.getElementById('rouletteStrip').style.display = 'flex';
@@ -172,10 +213,13 @@ function spinRoulette() {
             isSpinning = false;
             btn.disabled = false;
             inventory.push({ ...wonItem, uniqueId: generateSafeId() });
+            
+            // WYZWANIE MODALU PO ANIMACJI
+            showResultModal([wonItem], totalCost);
+
         }, 6500);
 
     } 
-    // HURTOWE OTWIERANIE (Szybki tryb bez paska ruletki)
     else {
         document.getElementById('rouletteStrip').style.display = 'none';
         document.getElementById('rouletteSelector').style.display = 'none';
@@ -185,14 +229,12 @@ function spinRoulette() {
 
         let wonItems = [];
         
-        // Losowanie
         for(let i=0; i < openQuantity; i++) {
             const wonItem = getRolledItem(currentCase.items);
             wonItems.push(wonItem);
             inventory.push({ ...wonItem, uniqueId: generateSafeId() });
         }
 
-        // Pokazanie z efektem opóźnienia, żeby fajnie "wskakiwały" (popIn)
         wonItems.forEach((item, index) => {
             setTimeout(() => {
                 fastContainer.innerHTML += `
@@ -200,13 +242,16 @@ function spinRoulette() {
                         <img src="${item.img}">
                     </div>
                 `;
-            }, index * 100); // Każdy item pojawia się o 0.1s później
+            }, index * 100); 
         });
 
-        // Odblokowanie po tym jak wskoczą wszystkie
         setTimeout(() => {
             isSpinning = false;
             btn.disabled = false;
+            
+            // WYZWANIE MODALU PO SZYBKIM LOSOWANIU
+            showResultModal(wonItems, totalCost);
+
         }, wonItems.length * 100 + 500);
     }
 }
@@ -241,7 +286,6 @@ function renderInventory() {
     });
 }
 
-// Funkcja teraz bezpiecznie porównuje i usuwa
 window.sellItem = function(uniqueId, price) {
     inventory = inventory.filter(item => item.uniqueId !== uniqueId);
     balance += price;
