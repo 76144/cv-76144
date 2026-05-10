@@ -4,32 +4,26 @@ let currentCase = null;
 let isSpinning = false;
 let openQuantity = 1;
 
-// FUNKCJA ZABEZPIECZAJĄCA ZDJĘCIA: 
-// Jeśli link ze Steam nie zadziała, podstawi ładny, wygenerowany obrazek.
+// Niezawodny fallback, gdyby cokolwiek ze Steamem nadal szwankowało
 const getFallbackImage = (text) => `https://placehold.co/150x100/1e293b/06b6d4?text=${encodeURIComponent(text)}`;
 
-// BAZA DANYCH Z REALNĄ EKONOMIĄ CS2 I OFICJALNYMI SZANSAMI (%)
+// BAZA DANYCH - PRAWDZIWA EKONOMIA CS2
 const casesData = [
     {
         id: 'revolution',
         name: 'Revolution Case',
-        price: 12.50, // Realna cena: Klucz (10.50) + Skrzynka (2.00)
+        price: 12.50,
         img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsRVx4MwFo5_T3eAQ3i6DMIW0X7ojiw9WIwaP3Y-OEwT8GvZYn07mS8Y2h3Qy1qkNlYjj3cNDBdlJvNQ6HqVPqwvCv28EzB2M/200fx185f',
         items: [
-            // Złote / Kosy / Rękawiczki (0.26%) - OGROMNY ZYSK
             { name: 'Vice', weapon: 'Sport Gloves', price: 4500.00, chance: 0.260, rarity: '#ffd700', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpovbSsLQJf2PLacDBA5ciJlY20kPb5Prrukm5X_cNx2rDHoInw2Qaw_UJsZGuhd4LDegZsNwrT-VG7l-3phJ-_vprNmnI2viIi-z-DyP2h82gC/200fx185f' },
-            // Czerwone / Covert (0.64%) - ZYSK
             { name: 'Head Shot', weapon: 'AK-47', price: 180.00, chance: 0.320, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJegJN6dUilY2GmvLLPr7Vn35cppR02uHDooygi1Ky_xFpYG70JNSSdlRoaA6C_AC7lOm911Lr7Z_OySM16D5iuyiPV10XMA/200fx185f' },
             { name: 'Temukau', weapon: 'M4A4', price: 160.00, chance: 0.320, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou-6kejhz2v_Nfz5H_uO1gb-Gw_alIITfn2xZ_Isp273CpdWg2lGw8kBtZWjzLNKUdVRsZw7S_Vi3kry81MLvvMnJzyFjs3Mg4XmPn0GygB9PaLdxxavJeQ9U9w/200fx185f' },
-            // Różowe / Classified (3.20%) - NIEWIELKI ZYSK
             { name: 'Duality', weapon: 'AWP', price: 60.00, chance: 1.066, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot621FAR17P7NdTRH-t26q4yCkP_gfe_Uwz1X7MhwjO3D84ii3w3g-hA5MTiiIdTHdAc9YV-F8gO_xe281JfptcuYmydkuiMj-z-DyB1sSjFv/200fx185f' },
             { name: 'Wild Child', weapon: 'UMP-45', price: 25.00, chance: 1.066, rarity: '#d32ce6', wear: 'MW', wearColor: '#3b82f6', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpoo7e1f1Hf0vH3ZDBH_8uJloiCg_b4Pq7Uk2tV-5VwgbvTpNym0ALj-kVuZzyhcIacdQU6YwnQqVW-xe-618e478idziBguD5iuyj4yvWNAQ/200fx185f' },
             { name: 'Neoqueen', weapon: 'P90', price: 20.00, chance: 1.068, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpopoL1FBRw7P7NYjV9-N24q42KqOXxP7Pcl38H7JFw3O_Hpom33gHk8kA6Ym2gcoCQIwdqMA7UrwTvw73n1JO4vMnBzncwv3Mj-z-DyPPqVp5O/200fx185f' },
-            // Fioletowe / Restricted (15.98%) - STRATA
             { name: 'Emphorosaur-S', weapon: 'M4A1-S', price: 8.50, chance: 5.326, rarity: '#8847ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou-6kejhjxszJemkV09K_k4iYmfbLP7LWnn8f65Nw2-qSp9im2Fbm-EE-amjxdYSdIFA8Nl6G8wa9krjt15ftupXKyiQ3inMj-z-DyB-yP68q/200fx185f' },
             { name: 'Umbral Rabbit', weapon: 'Glock-18', price: 5.20, chance: 5.326, rarity: '#8847ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposbaqKAxf0v73fwJP7c-lq4aPmvXLNqjXl2hU-sF-3urA9tz30QLt8kJtNmCgINSWI1I_Y1uG8lS8wrvn08S0vZuazXFlsndwe2O2Mg/200fx185f' },
             { name: 'Sakkaku', weapon: 'MAC-10', price: 4.80, chance: 5.328, rarity: '#8847ff', wear: 'MW', wearColor: '#3b82f6', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou7umdzZfxczJTid8_dG5goGIm-v_NoTck29Y_cg_0-qXrImj2QbkqRY9N2vzLtfJdlU6YQ2CrFTtwezshZK6vZ7MzSJnuilysSvemxGz0RhPO-A8m7XAHg1cK3Q/200fx185f' },
-            // Niebieskie / Mil-Spec (79.92%) - DUŻA STRATA (Zapychacze skrzynek)
             { name: 'Featherweight', weapon: 'MP9', price: 1.20, chance: 19.98, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou6ryFA957PvBdTVL-9y4kZSKm_v1MoTHkjlV-spz2LHE9or32Qbk-xVoMmyncNKUdVM-aFzVqAPqlrnujJDutMmbmCRgvyNzsHvVyhCx1QYMMLLyC1p1/200fx185f' },
             { name: 'Fragments', weapon: 'SCAR-20', price: 0.80, chance: 19.98, rarity: '#4b69ff', wear: 'MW', wearColor: '#3b82f6', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpoo3m1FBRp3_bGcjhQ09-jq5WYh-TxI7TUqWNU6dNoxOuSrYmt31Xh8kM9MjqhdoTHegZvaAnV_AC9kry5hsft752cmHNls3Mj-z-DyG284L4w/200fx185f' },
             { name: 'Re.built', weapon: 'P250', price: 0.75, chance: 19.98, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpopujwezhz3_bGcjhQ09-jq5WYh-TxI4Tck29Y_cg_iLyTpNSgjQKwrxVvN2H0JoDDJQY3NVHWrVbqwezn1sS8usydmicwuz5iuyiPBVf5u0U/200fx185f' },
@@ -48,6 +42,20 @@ const casesData = [
             { name: 'Ticket to Hell', weapon: 'USP-S', price: 9.00, chance: 15.980, rarity: '#8847ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpoo6m1FBRp3_bGcjhQ09-jq5WYh8j_OrfdqWhe5sN4mOTE8bP4jVC9vh5yZzumcdOUIFI5YgvR-we_wu_vgJK6tZjOmHM3viIi-z-DyBBz_2Yl/200fx185f' },
             { name: 'Scrawl', weapon: 'Five-SeveN', price: 0.80, chance: 39.960, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposLOzLhRlxfbGTi5N08y7mYS0lPL8MrXUl2hU-sF-j_qQoN3w3A23qRBsYWDzLYHGIwc4MAvTrAToxua9gpPouMmcmHpgsiY8pSGKq2wW/200fx185f' },
             { name: 'Ensnared', weapon: 'MAC-10', price: 0.60, chance: 39.960, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou7umdzZf0vL3dzxG6eOmgZODqP_xMq3I2GlV-Nd_jO-R9IqhjlGxrUFkNTinJ9OSdQZsNAqCrlTqwenpgMO7vZXIyiMw6Sdz7HiLy0G0hAYMMLKV4B7eFQ/200fx185f' }
+        ]
+    },
+    {
+        id: 'fracture',
+        name: 'Fracture Case',
+        price: 11.20,
+        img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsRVx4MwFo5_T3eAQ3i6DMIW0X7ojiw9WIwaP3Y-OEwT8GvZYn07mS8Y2h3Qy1qkNlYjj3cNDBdlJvNQ6HqVPqwvCv28EzB2M/200fx185f',
+        items: [
+            { name: 'Printstream', weapon: 'Desert Eagle', price: 250.00, chance: 0.640, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgposr-kLAtl7PLZTjlH_9mkgL-OlvD4NoTUkyVQ7cZ8j-3I4IG72gDj80ZpNWGlIYCXdAM6NAzZqATtwOi8h8e9uJ3LyiNjuyN0-z-DyG2ZkX7x/200fx185f' },
+            { name: 'Legion of Anubis', weapon: 'AK-47', price: 45.00, chance: 0.640, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV0924lZKIn-7LMbHGlD1DpeTAi3_Dq4ii3VDmr0RtMjyiJoDAdw49Zw2D8lW6xfXthJW_vJibnXI36SEm-z-DyP2hP_f6/200fx185f' },
+            { name: 'Tooth Fairy', weapon: 'M4A4', price: 15.00, chance: 3.200, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou-6kejhz2v_Nfz5H_uO1gb-Gw_alIITfn2xZ_Ish0u3A9t2jjVfl_RVvNWDxJYOVcAo9ZV2B-gW8le_njJ60vMjNyydluXQm4HjfzkLlhgYMMLL7K1c56Q/200fx185f' },
+            { name: 'Brother', weapon: 'MAC-10', price: 1.50, chance: 15.980, rarity: '#8847ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpou7umdzZf0vL3dzxG6eOhloCQg_H5MbzTmG1H58pziLjDo4j3iVNvaw26Ig-SJAo5NA7Trlm9weu_hcO0752f1zI97e-QfDIf/200fx185f' },
+            { name: 'Grim', weapon: 'P250', price: 0.60, chance: 39.960, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpopujwezhz3_bGcjhQ09-jq5WYh-TxI4Tck29Y_cg_3L-S84mjjAGx_hJtMTqhLIbAIAdvaQnWqla-ku_u05DouZvBzSRlvyIgtn6OyA/200fx185f' },
+            { name: 'Cassette', weapon: 'P90', price: 0.50, chance: 39.960, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpopoL1FBRw7P7NYjV9-N24q42KqOT8Nq_um25V4dB8xOiWod2kiQTn8xZrZzyiINWXcgNsZwmBqVa_wb-9hpC96szKnCRn7Cl0tnyPgVXp1kM8Q69R/200fx185f' }
         ]
     }
 ];
@@ -68,9 +76,9 @@ function init() {
         const card = document.createElement('div');
         card.className = 'case-card';
         card.onclick = () => setupCaseOpening(c);
-        // TUTA JEST ZABEZPIECZENIE: onerror="this.src='...'"
+        // Zabezpieczenie na onerror
         card.innerHTML = `
-            <img src="${c.img}" class="case-img" onerror="this.src='${getFallbackImage(c.name)}'">
+            <img src="${c.img}" class="case-img" onerror="this.onerror=null; this.src='${getFallbackImage(c.name)}'">
             <h3>${c.name}</h3>
             <p style="color: var(--accent); font-weight: bold;">${c.price.toFixed(2)} zł</p>
         `;
@@ -107,7 +115,7 @@ function setupCaseOpening(caseObj) {
             <div class="content-card" style="border-top-color: ${item.rarity}">
                 <div class="badge-wear" style="background: ${item.wearColor}">${item.wear}</div>
                 <div class="badge-chance">${item.chance.toFixed(3)}%</div>
-                <img src="${item.img}" class="content-img" onerror="this.src='${getFallbackImage(item.weapon)}'">
+                <img src="${item.img}" class="content-img" onerror="this.onerror=null; this.src='${getFallbackImage(item.weapon)}'">
                 <div class="content-info">
                     <p class="content-name">${item.name}</p>
                     <p class="content-weapon">${item.weapon}</p>
@@ -153,7 +161,7 @@ function showResultModal(wonItems, totalCost) {
         totalValue += item.price;
         itemsContainer.innerHTML += `
             <div class="modal-item" style="border-bottom-color: ${item.rarity}">
-                <img src="${item.img}" onerror="this.src='${getFallbackImage(item.weapon)}'">
+                <img src="${item.img}" onerror="this.onerror=null; this.src='${getFallbackImage(item.weapon)}'">
                 <p>${item.weapon} | ${item.name}</p>
                 <span>${item.price.toFixed(2)} zł</span>
             </div>
@@ -219,7 +227,7 @@ function spinRoulette() {
             let displayItem = (i === winningIndex) ? wonItem : currentCase.items[Math.floor(Math.random() * currentCase.items.length)];
             rouletteStrip.innerHTML += `
                 <div class="roulette-item" style="border-bottom-color: ${displayItem.rarity}">
-                    <img src="${displayItem.img}" onerror="this.src='${getFallbackImage(displayItem.weapon)}'">
+                    <img src="${displayItem.img}" onerror="this.onerror=null; this.src='${getFallbackImage(displayItem.weapon)}'">
                 </div>
             `;
         }
@@ -263,7 +271,7 @@ function spinRoulette() {
             setTimeout(() => {
                 fastContainer.innerHTML += `
                     <div class="fast-open-item" style="border-bottom-color: ${item.rarity}">
-                        <img src="${item.img}" onerror="this.src='${getFallbackImage(item.weapon)}'">
+                        <img src="${item.img}" onerror="this.onerror=null; this.src='${getFallbackImage(item.weapon)}'">
                     </div>
                 `;
             }, index * 100); 
@@ -295,7 +303,7 @@ function renderInventory() {
         card.style.borderTopColor = item.rarity;
         card.innerHTML = `
             <div class="badge-wear" style="background: ${item.wearColor}">${item.wear}</div>
-            <img src="${item.img}" class="content-img" onerror="this.src='${getFallbackImage(item.weapon)}'">
+            <img src="${item.img}" class="content-img" onerror="this.onerror=null; this.src='${getFallbackImage(item.weapon)}'">
             <div class="content-info">
                 <p class="content-name">${item.name}</p>
                 <p class="content-weapon">${item.weapon}</p>
