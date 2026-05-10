@@ -6,124 +6,61 @@
     --border: #1e293b;
 }
 
-body {
-    margin: 0; background-color: var(--bg-color); color: var(--text);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* KRYTYCZNE DLA DZIAŁANIA ZAKŁADEK */
+body { margin: 0; background-color: var(--bg-color); color: var(--text); font-family: 'Segoe UI', sans-serif; }
 .view { display: none !important; }
 .view.active { display: block !important; animation: fadeIn 0.3s ease-in-out; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* Nawigacja */
-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 5%; background-color: var(--card-bg); border-bottom: 1px solid var(--border);
-}
+header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background-color: var(--card-bg); border-bottom: 1px solid var(--border); }
 .logo { font-size: 24px; font-weight: bold; color: var(--accent); }
-.main-nav button {
-    background: transparent; border: none; color: #94a3b8; font-size: 16px;
-    margin: 0 10px; cursor: pointer; font-weight: bold; transition: 0.3s;
-}
+.main-nav button { background: transparent; border: none; color: #94a3b8; font-size: 16px; margin: 0 10px; cursor: pointer; font-weight: bold; transition: 0.3s; }
 .main-nav button:hover { color: var(--text); }
-.wallet {
-    background: rgba(6, 182, 212, 0.1); padding: 8px 16px; border-radius: 8px;
-    color: var(--accent); border: 1px solid var(--accent); font-family: monospace; font-size: 16px;
-}
+.wallet { background: rgba(6, 182, 212, 0.1); padding: 8px 16px; border-radius: 8px; color: var(--accent); border: 1px solid var(--accent); font-family: monospace; font-size: 16px; }
 
 main { padding: 40px 5%; overflow: hidden; }
-
-/* Baner i lista skrzynek */
 .hero { background: linear-gradient(90deg, #1e3a8a, var(--bg-color)); padding: 40px; border-radius: 15px; margin-bottom: 40px; text-align: center; }
 .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-.case-card { 
-    background: var(--card-bg); padding: 20px; text-align: center; 
-    border-radius: 10px; border: 1px solid var(--border); transition: 0.3s; cursor: pointer; 
-}
+.case-card { background: var(--card-bg); padding: 20px; text-align: center; border-radius: 10px; border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
 .case-card:hover { border-color: var(--accent); transform: translateY(-5px); }
 .case-card img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 15px; }
 
-/* Widok otwierania */
 .back-btn { background: transparent; border: none; color: #94a3b8; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
 .back-btn:hover { color: white; }
 .case-header { text-align: center; margin-bottom: 30px; }
 .case-header h2 { font-size: 28px; margin: 0 0 5px 0; }
 .case-price-subtitle { color: var(--accent); font-weight: bold; font-size: 18px; margin: 0; }
 
-/* Ruletka */
 .roulette-wrapper { max-width: 1000px; margin: 0 auto; padding: 10px; }
-.roulette-window {
-    width: 100%; height: 160px; background: rgba(18, 21, 38, 0.6);
-    border: 1px solid #1e3a8a; border-radius: 12px; position: relative; overflow: hidden;
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
-}
-.roulette-selector {
-    position: absolute; left: 50%; top: 0; bottom: 0; width: 140px;
-    transform: translateX(-50%); border: 2px solid var(--accent);
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.5), inset 0 0 10px rgba(6, 182, 212, 0.2);
-    z-index: 10; pointer-events: none; border-radius: 8px;
-}
-.roulette-strip {
-    display: flex; height: 100%; width: max-content; align-items: center;
-    transition: transform 6s cubic-bezier(0.15, 0.05, 0.1, 1);
-}
-.roulette-item {
-    width: 140px; height: 130px; margin: 0 5px; background: rgba(30, 41, 59, 0.4); 
-    border-radius: 8px; display: flex; justify-content: center; align-items: center;
-    border: 1px solid rgba(255,255,255,0.05); border-bottom: 3px solid; 
-}
+.roulette-window { width: 100%; height: 160px; background: rgba(18, 21, 38, 0.6); border: 1px solid #1e3a8a; border-radius: 12px; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(6, 182, 212, 0.1); }
+.roulette-selector { position: absolute; left: 50%; top: 0; bottom: 0; width: 140px; transform: translateX(-50%); border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(6, 182, 212, 0.5), inset 0 0 10px rgba(6, 182, 212, 0.2); z-index: 10; pointer-events: none; border-radius: 8px; }
+.roulette-strip { display: flex; height: 100%; width: max-content; align-items: center; transition: transform 6s cubic-bezier(0.15, 0.05, 0.1, 1); }
+.roulette-item { width: 140px; height: 130px; margin: 0 5px; background: rgba(30, 41, 59, 0.4); border-radius: 8px; display: flex; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.05); border-bottom: 3px solid; }
 .roulette-item img { width: 110px; height: 80px; object-fit: contain; }
 
-/* Przyciski pod ruletką */
+/* STYLE DLA HURTOWEGO OTWIERANIA */
+.fast-open-results { display: none; width: 100%; height: 100%; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px; box-sizing: border-box; overflow-y: auto; }
+.fast-open-item { width: 100px; height: 100px; background: var(--card-bg); border-bottom: 3px solid; border-radius: 8px; display: flex; justify-content: center; align-items: center; position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; transform: scale(0.5); }
+.fast-open-item img { width: 80px; height: 60px; object-fit: contain; }
+@keyframes popIn { to { opacity: 1; transform: scale(1); } }
+
 .case-controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; }
-.multi-open button, .extra-toggles button {
-    background: #1e293b; border: none; color: white; width: 40px; height: 40px;
-    border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s;
-}
-.multi-open button { border-radius: 50%; }
+.multi-open button { background: #1e293b; border: none; color: white; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; border-radius: 50%; }
 .multi-open button.active { background: var(--accent); color: #000; }
-.multi-open button:disabled { opacity: 0.5; cursor: not-allowed; }
-.main-open-btn {
-    background: var(--accent); color: #000; border: none; padding: 15px 40px;
-    font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s;
-}
+.main-open-btn { background: var(--accent); color: #000; border: none; padding: 15px 40px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
 .main-open-btn:hover { background: #0891b2; color: white; }
 .main-open-btn:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; }
-.battle-btn-wrapper { text-align: center; margin-top: 20px; }
-.battle-btn {
-    background: transparent; border: 1px solid #4c1d95; color: #a78bfa;
-    padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: 0.2s;
-}
 
-/* Karty przedmiotów (Siatka zawartości i ekwipunku) */
 .contents-title { text-align: center; margin-top: 40px; margin-bottom: 20px; }
-.contents-grid-new {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;
-    max-width: 1200px; margin: 0 auto;
-}
-.content-card {
-    background: var(--card-bg); border-radius: 8px; padding: 15px; position: relative;
-    border-top: 3px solid; display: flex; flex-direction: column; align-items: center; text-align: left;
-}
-.badge-wear {
-    position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: bold;
-    padding: 2px 6px; border-radius: 4px; color: #000;
-}
-.badge-chance {
-    position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: bold;
-    background: rgba(255, 255, 255, 0.1); padding: 2px 6px; border-radius: 4px;
-}
+.contents-grid-new { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
+.content-card { background: var(--card-bg); border-radius: 8px; padding: 15px; position: relative; border-top: 3px solid; display: flex; flex-direction: column; align-items: center; text-align: left; }
+.badge-wear { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; color: #000; }
+.badge-chance { position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: bold; background: rgba(255, 255, 255, 0.1); padding: 2px 6px; border-radius: 4px; }
 .content-img { width: 140px; height: 100px; object-fit: contain; margin: 15px 0; }
 .content-info { width: 100%; text-align: center; }
 .content-name { font-size: 14px; font-weight: bold; margin: 0; }
 .content-weapon { font-size: 12px; color: #94a3b8; margin: 2px 0 10px 0; }
-.content-price {
-    font-size: 12px; color: var(--accent); background: rgba(6, 182, 212, 0.1);
-    padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(6, 182, 212, 0.3); display: inline-block;
-}
+.content-price { font-size: 12px; color: var(--accent); background: rgba(6, 182, 212, 0.1); padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(6, 182, 212, 0.3); display: inline-block; }
 
-/* Ekwipunek specyficzne */
 .inventory-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .inventory-stats { display: flex; gap: 20px; align-items: center; }
 .sell-all-btn { background: #dc2626; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
