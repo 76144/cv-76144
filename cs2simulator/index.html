@@ -3,34 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseSimulator</title>
+    <title>CaseSimulator Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <div class="logo">CaseSimulator</div>
+        <nav class="main-nav">
+            <button onclick="switchTab('cases')">Skrzynki</button>
+            <button onclick="switchTab('inventory')">Ekwipunek</button>
+        </nav>
         <div class="wallet">
             <span id="balance">100.00</span> zł
         </div>
     </header>
 
     <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h2>Odbierz darmową skrzynkę!</h2>
-                <p>Dostępna co 8 godzin dla aktywnych graczy.</p>
-                <button>OTWÓRZ SKRZYNKĘ</button>
-            </div>
-        </section>
-
-        <section class="cases-section">
-            <h3>Skrzynki standardowe</h3>
-            <div class="cases-grid" id="casesGrid">
+        <section id="view-cases" class="view active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h2>Wybierz skrzynkę do otwarcia</h2>
                 </div>
+            </div>
+            <div class="cases-grid" id="casesGrid"></div>
         </section>
 
-        <section class="inventory-section">
-            <h3>Twój Ekwipunek</h3>
+        <section id="view-opening" class="view">
+            <button class="back-btn" onclick="switchTab('cases')">← Wróć do skrzynek</button>
+            <h2 id="openingCaseName" style="text-align: center; margin-bottom: 20px;">Nazwa Skrzynki</h2>
+            
+            <div class="roulette-container">
+                <div class="roulette-line"></div>
+                <div class="roulette-strip" id="rouletteStrip">
+                    </div>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <button id="openCaseBtn" class="open-btn">OTWÓRZ (<span id="openingCasePrice">0.00</span> zł)</button>
+            </div>
+
+            <h3>Zawartość skrzynki:</h3>
+            <div class="contents-grid" id="caseContentsGrid"></div>
+        </section>
+
+        <section id="view-inventory" class="view">
+            <div class="inventory-header">
+                <h2>Twój Ekwipunek</h2>
+                <div class="inventory-stats">
+                    <span>Łączna wartość: <b id="totalValue" style="color: #22c55e;">0.00 zł</b></span>
+                    <button class="sell-all-btn" onclick="sellAll()">Sprzedaj wszystko</button>
+                </div>
+            </div>
             <div class="inventory-grid" id="inventoryGrid">
                 </div>
         </section>
