@@ -361,3 +361,256 @@ window.sellAll = function() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// --- ZACHOWAJ BAZĘ DANYCH (casesData), PŁYNNE ODLICZANIE (animateValue) I INNE FUNKCJE Z POPRZEDNIEJ WERSJI ---
+
+// === SEKCJA UPGRADER (DODAJ TO NA KOŃCU PLIKU) ===
+
+let upInput = null;
+let upTarget = null;
+let upBalance = 0;
+const HOUSE_EDGE = 0.05; // 5% prowizji serwera - Matematyka kasynowa
+
+// Ekstrakcja wszystkich dostępnych skinów z bazy jako asortyment "Sklepu"
+const siteStoreItems = [];
+casesData.forEach(caseObj => {
+    caseObj.items.forEach(item => {
+        // Unikamy duplikatów w sklepie
+        if(!siteStoreItems.find(i => i.name === item.name && i.weapon === item.weapon)) {
+            siteStoreItems.push(item);
+        }
+    });
+});
+// Sortowanie sklepu od najdroższego
+siteStoreItems.sort((a, b) => b.price - a.price);
+
+// Przebudowa switchTab aby renderował upgrader przy wejściu
+const originalSwitchTab = switchTab; // Zachowujemy oryginalną funkcję
+switchTab = function(tabId) {
+    originalSwitchTab(tabId);
+    if(tabId === 'upgrader') {
+        renderUpgraderInvs();
+        updateUpgrader(); // Odśwież UI
+    }
+}
+
+function renderUpgraderInvs() {
+    const uInv = document.getElementById('up-user-inv');
+    const sInv = document.getElementById('up-store-inv');
+    uInv.innerHTML = ''; sInv.innerHTML = '';
+
+    // Renderowanie ekwipunku gracza w lewej kolumnie
+    if(inventory.length === 0) {
+        uInv.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">Brak przedmiotów. Otwórz skrzynki!</p>';
+    } else {
+        [...inventory].reverse().forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'content-card';
+            card.style.borderTopColor = item.rarity;
+            card.innerHTML = `<img src="${item.img}"> <div class="content-info"><p class="content-name">${item.weapon}</p><div class="content-price">${item.price.toFixed(2)}zł</div></div>`;
+            card.onclick = () => { 
+                upInput = item; 
+                updateUpgrader(); 
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Wróć na górę po kliknięciu
+            };
+            uInv.appendChild(card);
+        });
+    }
+
+    // Renderowanie sklepu (celów) w prawej kolumnie
+    siteStoreItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'content-card';
+        card.style.borderTopColor = item.rarity;
+        card.innerHTML = `<img src="${item.img}"> <div class="content-info"><p class="content-name">${item.weapon}</p><div class="content-price">${item.price.toFixed(2)}zł</div></div>`;
+        card.onclick = () => { 
+            upTarget = item; 
+            updateUpgrader();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        sInv.appendChild(card);
+    });
+}
+
+// Główna funkcja aktualizująca UI Upgradera
+window.updateUpgrader = function() {
+    const slider = document.getElementById('up-slider');
+    upBalance = parseFloat(slider.value) || 0;
+    document.getElementById('up-slider-val').innerText = upBalance;
+
+    // Aktualizacja ikon
+    const inSlot = document.getElementById('up-input-slot');
+    if(upInput) {
+        inSlot.innerHTML = `<img src="${upInput.img}">`;
+        inSlot.style.borderColor = upInput.rarity;
+    } else {
+        inSlot.innerHTML = '+';
+        inSlot.style.borderColor = 'var(--glass-border)';
+    }
+
+    const outSlot = document.getElementById('up-target-slot');
+    if(upTarget) {
+        outSlot.innerHTML = `<img src="${upTarget.img}">`;
+        outSlot.style.borderColor = upTarget.rarity;
+    } else {
+        outSlot.innerHTML = '+';
+        outSlot.style.borderColor = 'var(--glass-border)';
+    }
+
+    const totalInput = (upInput?.price || 0) + upBalance;
+    const targetPrice = upTarget?.price || 0;
+
+    document.getElementById('up-input-price').innerText = totalInput.toFixed(2) + ' zł';
+    document.getElementById('up-target-price').innerText = targetPrice.toFixed(2) + ' zł';
+
+    // OBLICZANIE SZANSY (Matematyka backendowa przeniesiona na front)
+    let chance = 0;
+    if(targetPrice > 0 && totalInput > 0) {
+        chance = (totalInput / targetPrice) * (1 - HOUSE_EDGE) * 100;
+    }
+    
+    // Zabezpieczenie UX: Nie pozwalamy na szansę większą niż 80%, to psuje ekonomię gier hazardowych
+    chance = Math.min(Math.max(chance, 0), 80); 
+
+    // Rysowanie koła ruletki przy użyciu conic-gradient
+    const wheel = document.getElementById('up-wheel');
+    document.getElementById('up-chance-text').innerText = chance.toFixed(2) + '%';
+    document.getElementById('up-ratios').innerText = `Wkład: ${totalInput.toFixed(2)} / Cel: ${targetPrice.toFixed(2)}`;
+
+    // Reset animacji koła
+    wheel.style.transition = 'none';
+    wheel.style.transform = 'rotate(0deg)';
+
+    // Jeśli jest jakakolwiek szansa, wypełnij koło na zielono od 0deg do X%
+    if(chance > 0) {
+        wheel.style.background = `conic-gradient(var(--accent-green) 0% ${chance}%, rgba(255,255,255,0.05) ${chance}% 100%)`;
+        wheel.style.boxShadow = `0 0 40px rgba(0, 255, 136, 0.3)`;
+    } else {
+        wheel.style.background = `conic-gradient(rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.05) 100%)`;
+        wheel.style.boxShadow = `0 0 40px rgba(0, 0, 0, 0.5)`;
+    }
+}
+
+// Funkcja mnożników - Automatycznie szuka skina o wartości X razy wyższej
+window.autoPickTarget = function(multiplier) {
+    const totalInput = (upInput?.price || 0) + upBalance;
+    if(totalInput === 0) return alert('Najpierw wybierz swój wkład lub dodaj dopłatę z salda!');
+    
+    const desiredTargetValue = totalInput * multiplier;
+    
+    // Znajdź pierwszy przedmiot, którego cena jest równa lub większa wymaganemu targetowi
+    // Omijamy przedmioty zbyt tanie
+    const validItems = siteStoreItems.filter(i => i.price >= desiredTargetValue).sort((a,b) => a.price - b.price);
+    
+    if(validItems.length > 0) {
+        upTarget = validItems[0]; // Wybierz najbliższy wymogom
+        updateUpgrader();
+    } else {
+        alert(`Brak przedmiotu w sklepie o wartości minimum ${desiredTargetValue.toFixed(2)} zł!`);
+    }
+}
+
+// GŁÓWNA LOGIKA LOSOWANIA I ANIMACJI (SYMULACJA PROVABLY FAIR)
+window.spinUpgrader = function() {
+    if(!upInput && upBalance === 0) return alert('Musisz zaoferować jakiś wkład!');
+    if(!upTarget) return alert('Wybierz cel ulepszenia ze sklepu po prawej stronie!');
+    
+    const totalInput = (upInput?.price || 0) + upBalance;
+    const targetPrice = upTarget.price;
+    
+    if(balance < upBalance) return alert('Nie masz wystarczających środków na dopłatę!');
+
+    // Dokładne wyliczenie szansy (serwer)
+    let chance = (totalInput / targetPrice) * (1 - HOUSE_EDGE) * 100;
+    chance = Math.min(Math.max(chance, 0), 80);
+
+    if(chance <= 0) return alert('Szansa jest zbyt mała. Dodaj więcej wkładu!');
+
+    // POBRANIE WKŁADU OD GRACZA
+    balance -= upBalance;
+    if(upInput) {
+        inventory = inventory.filter(i => i.uniqueId !== upInput.uniqueId); // Usunięcie użytego skina
+    }
+    updateBalanceDisplay();
+    
+    isSpinning = true;
+    const btn = document.getElementById('up-btn');
+    btn.disabled = true;
+    btn.innerText = "KRĘCENIE...";
+
+    // 1. GENEROWANIE WYNIKU (RNG)
+    const roll = Math.random() * 100; 
+    const isWin = roll <= chance;
+
+    // 2. WYLICZENIE KĄTA DLA ANIMACJI
+    const winDegrees = (chance / 100) * 360; // Np. 25% szansy = 90 stopni zielonego pola
+    let stopDegree = 0;
+    
+    if(isWin) {
+        // Zatrzymujemy się głęboko w ZIELONEJ STREFIE (od 2 do winDegrees-2)
+        stopDegree = 2 + Math.random() * (Math.max(1, winDegrees - 4));
+    } else {
+        // Zatrzymujemy się głęboko w SZAREJ STREFIE (poza zielonym polem)
+        stopDegree = winDegrees + 2 + Math.random() * (358 - winDegrees - 4);
+    }
+
+    // Dodajemy 6 pełnych rotacji dla dramaturgii (2160 stopni).
+    // Gradient zaczyna od góry. Aby zatrzymać w odpowiednim miejscu kręcąc DIV-em, odejmujemy stopDegree od 360.
+    const spinDeg = 2160 + (360 - stopDegree); 
+
+    const wheel = document.getElementById('up-wheel');
+    // Ustawiamy niesamowicie płynną fizykę zwalniania (cubic-bezier)
+    wheel.style.transition = 'transform 7s cubic-bezier(0.1, 0, 0.05, 1)';
+    wheel.style.transform = `rotate(${spinDeg}deg)`;
+
+    // 3. ROZSTRZYGNIĘCIE PO ZAKOŃCZENIU ANIMACJI (7 SEKUND)
+    setTimeout(() => {
+        const modal = document.getElementById('resultModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const itemsContainer = document.getElementById('modalItems');
+        const summary = document.getElementById('modalSummary');
+        
+        itemsContainer.innerHTML = `
+            <div class="modal-item" style="border-bottom-color: ${upTarget.rarity}">
+                <img src="${upTarget.img}">
+                <p>${upTarget.weapon}</p>
+                <p style="color: #94a3b8; font-size: 11px;">${upTarget.name}</p>
+            </div>
+        `;
+
+        if(isWin) {
+            inventory.push({...upTarget, uniqueId: generateSafeId()});
+            modalTitle.innerText = "NIESAMOWITE!";
+            modalTitle.style.color = "var(--accent-green)";
+            summary.innerHTML = `
+                <p style="color: var(--text-muted)">Zaryzykowałeś: <b style="color: white">${totalInput.toFixed(2)} zł</b></p>
+                <p style="color: var(--text-muted)">Szansa: <b style="color: white">${chance.toFixed(2)}%</b></p>
+                <p style="color: var(--accent-green); font-size: 22px; font-weight: bold; margin-top:15px;">Ulepszenie powiodło się!</p>
+            `;
+        } else {
+            modalTitle.innerText = "PRZEGRANA...";
+            modalTitle.style.color = "var(--accent-red)";
+            // Czerwony cień jako feedback przegranej
+            itemsContainer.innerHTML = itemsContainer.innerHTML.replace('style="', 'style="box-shadow: inset 0 0 30px rgba(255,0,0,0.5); filter: grayscale(100%); ');
+            summary.innerHTML = `
+                <p style="color: var(--text-muted)">Zaryzykowałeś: <b style="color: white">${totalInput.toFixed(2)} zł</b></p>
+                <p style="color: var(--text-muted)">Szansa: <b style="color: white">${chance.toFixed(2)}%</b></p>
+                <p style="color: var(--accent-red); font-size: 22px; font-weight: bold; margin-top:15px;">Twój przedmiot przepadł.</p>
+            `;
+        }
+        
+        modal.classList.add('active');
+        
+        // Reset stanu po losowaniu
+        isSpinning = false;
+        btn.disabled = false;
+        btn.innerText = "ULEPSZ SKIN";
+        upInput = null;
+        upTarget = null;
+        document.getElementById('up-slider').value = 0;
+        updateUpgrader();
+        renderUpgraderInvs();
+        renderInventory();
+        
+    }, 7500); // 7.5s (0.5s przerwy na złapanie tchu przez usera po zatrzymaniu)
+}
