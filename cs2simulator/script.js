@@ -17,7 +17,7 @@ const generateStyleImage = (text, hexColor) => {
 };
 
 // ============================================
-// BAZA SKRZYNEK (Oparta na EV i Marży 10%)
+// BAZA SKRZYNEK (NOWE SKRZYNKI, Oparte na EV i Marży 10%)
 // ============================================
 const casesData = [
     {
@@ -139,6 +139,9 @@ function setupCaseOpening(caseObj) {
     document.getElementById('openingCaseName').innerText = `💠 ${caseObj.name}`;
     document.getElementById('openingCasePriceStr').innerText = `${caseObj.price.toFixed(2)}zł`;
     
+    // NAPRAWA: ZGUBIONY ONCLICK DO OTWIERANIA!
+    document.getElementById('openCaseBtn').onclick = () => spinRoulette();
+
     const contentsGrid = document.getElementById('caseContentsGrid');
     contentsGrid.innerHTML = '';
     caseObj.items.forEach(item => {
@@ -385,6 +388,60 @@ window.spinUpgrader = function() {
         document.getElementById('up-slider').value = 0;
         updateUpgrader(); renderUpgraderInvs(); renderInventory();
     }, 7500); 
+}
+
+// === WYNIKI I OKIENKA (MODAL) ===
+window.showResultModal = function(wonItems, totalCost) {
+    const modal = document.getElementById('resultModal');
+    const itemsContainer = document.getElementById('modalItems');
+    const summary = document.getElementById('modalSummary');
+    const modalTitle = document.getElementById('modalTitle');
+
+    itemsContainer.innerHTML = '';
+    let totalValue = 0;
+
+    wonItems.forEach((item, index) => {
+        totalValue += item.price;
+        itemsContainer.innerHTML += `
+            <div class="modal-item" style="border-bottom-color: ${item.rarity}; animation-delay: ${index * 0.1}s">
+                <img src="${item.img}">
+                <p>${item.weapon}</p>
+                <p style="color: #94a3b8; font-size: 11px; margin: 0 0 5px 0;">${item.name}</p>
+                <span>${item.price.toFixed(2)} zł</span>
+            </div>
+        `;
+    });
+
+    const profit = totalValue - totalCost;
+    let profitText = '';
+    let profitColor = '';
+
+    if (profit > 0) {
+        profitText = `JESTEŚ NA PLUS +${profit.toFixed(2)} zł! 🚀`;
+        profitColor = 'var(--accent-green)'; 
+        modalTitle.innerText = "WYGRANA!";
+        modalTitle.style.color = "var(--accent-green)";
+    } else if (profit < 0) {
+        profitText = `STRATA ${Math.abs(profit).toFixed(2)} zł. 📉`;
+        profitColor = 'var(--accent-red)'; 
+        modalTitle.innerText = "SŁABY DROP...";
+        modalTitle.style.color = "var(--accent-red)";
+    } else {
+        profitText = `WYSZEDŁEŚ NA ZERO. ⚖️`;
+        profitColor = 'var(--text-muted)'; 
+        modalTitle.innerText = "ZWROT KOSZTÓW";
+        modalTitle.style.color = "var(--text-muted)";
+    }
+
+    summary.innerHTML = `
+        <p style="color: var(--text-muted)">Wydano: <b style="color: var(--accent-red)">${totalCost.toFixed(2)} zł</b></p>
+        <p style="color: var(--text-muted)">Zdobyto: <b style="color: var(--accent-green)">${totalValue.toFixed(2)} zł</b></p>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="color: ${profitColor}; font-size: 20px; font-weight: bold; font-family: 'Rajdhani', sans-serif;">${profitText}</p>
+        </div>
+    `;
+
+    modal.classList.add('active');
 }
 
 // === EKWIPUNEK ===
