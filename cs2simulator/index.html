@@ -3,309 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Simulator Pro - Upgrader</title>
-    <style>
-        /* --- ZMIENNE I RESET --- */
-        :root {
-            --bg-main: #0b0f19;
-            --bg-panel: #111623;
-            --bg-banner-start: #231236;
-            --bg-banner-end: #0f1525;
-            --text-main: #ffffff;
-            --text-muted: #8b92a5;
-            --accent-cyan: #4ade80; /* Kolor zielony dla salda i nagłówka */
-            --accent-blue-start: #3b82f6;
-            --accent-blue-end: #06b6d4;
-            --border-color: #1f2937;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* --- NAWIGACJA --- */
-        nav {
-            width: 100%;
-            height: 70px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-            background-color: #080b12;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo span.pro {
-            background-color: #2563eb;
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            vertical-align: middle;
-            margin-left: 5px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text-main);
-        }
-
-        .balance-btn {
-            background-color: rgba(74, 222, 128, 0.1);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* --- GŁÓWNY KONTENER --- */
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        /* --- BANER UPGRADERA --- */
-        .banner {
-            background: linear-gradient(to right, var(--bg-banner-start), var(--bg-banner-end));
-            border-radius: 10px;
-            padding: 40px 20px;
-            text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-
-        .banner h1 {
-            color: #86efac; /* Jasny zielonkawy/cyan jak na screenie */
-            font-size: 28px;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .banner p {
-            color: var(--text-main);
-            font-size: 13px;
-        }
-
-        /* --- SEKCJE ROBOCZE --- */
-        .upgrader-panel {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .section {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .section:last-child {
-            border-bottom: none;
-        }
-
-        .section-title {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            color: #d1d5db;
-        }
-
-        /* Sekcja "Twój wkład" */
-        .input-details {
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .plus-icon {
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .value-text {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .doplata-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .doplata-highlight {
-            color: #60a5fa; /* Niebieski kolor dla 0 zł */
-            font-weight: bold;
-        }
-
-        .slider-track {
-            width: 150px;
-            height: 6px;
-            background-color: #374151;
-            border-radius: 3px;
-        }
-
-        .stats-text {
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-
-        /* Mnożniki */
-        .multipliers {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 15px;
-        }
-
-        .multi-btn {
-            background-color: #1f2937;
-            border: 1px solid #374151;
-            color: white;
-            padding: 4px 8px;
-            font-size: 11px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* Przycisk Ulepsz */
-        .btn-upgrade {
-            background: linear-gradient(to right, var(--accent-blue-start), var(--accent-blue-end));
-            border: none;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            padding: 12px 30px;
-            border-radius: 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
-            text-transform: uppercase;
-            transition: transform 0.2s;
-        }
-
-        .btn-upgrade:hover {
-            transform: scale(1.05);
-        }
-
-        /* Sekcja Ekwipunku */
-        .inventory-empty {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 13px;
-            padding: 40px 0;
-        }
-
-    </style>
+    <meta name="referrer" content="no-referrer">
+    <title>CaseSimulator Pro - Ultra Edition</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="ambient-bg">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
 
-    <nav>
+    <header>
         <div class="logo">
-            <span style="color: #60a5fa;">❖</span> CASESIMULATOR <span class="pro">PRO</span>
+            <span class="logo-icon">💠</span> CaseSimulator <span class="pro-badge">PRO</span>
         </div>
-        <ul class="nav-links">
-            <li><a href="#">Skrzynki</a></li>
-            <li><a href="#" class="active">Upgrader</a></li>
-            <li><a href="#">Ekwipunek</a></li>
-        </ul>
-        <button class="balance-btn">1000.00 zł</button>
-    </nav>
-
-    <div class="container">
-        
-        <div class="banner">
-            <h1>SKIN UPGRADER</h1>
-            <p>Poświęć słabe skiny, by zdobyć legendy. Marża serwera: 5%</p>
+        <nav class="main-nav">
+            <button onclick="switchTab('cases')" class="nav-btn">Skrzynki</button>
+            <button onclick="switchTab('upgrader')" class="nav-btn glow-text">Upgrader</button>
+            <button onclick="switchTab('inventory')" class="nav-btn">Ekwipunek</button>
+        </nav>
+        <div class="wallet pulse-glow">
+            <span id="balance">1000.00</span> zł
         </div>
+    </header>
 
-        <div class="upgrader-panel">
+    <main>
+        <section id="view-cases" class="view active">
+            <div class="hero fade-in">
+                <h2>Wybierz skrzynkę do otwarcia</h2>
+                <p>Przygotuj się na najlepsze dropy.</p>
+            </div>
+            <div class="cases-grid stagger-animate" id="casesGrid"></div>
+        </section>
+
+        <section id="view-opening" class="view">
+            <button class="back-btn" onclick="switchTab('cases')">
+                <span class="arrow">&lt;</span> Powrót do skrzynek
+            </button>
+            <div class="case-header fade-in">
+                <h2 id="openingCaseName" class="neon-text">Nazwa Skrzynki</h2>
+                <p class="case-price-subtitle" id="openingCasePriceStr">0,00zł</p>
+            </div>
+            <div class="roulette-wrapper fade-in delay-1">
+                <div class="roulette-window glass-panel" id="rouletteWindow">
+                    <div class="roulette-selector" id="rouletteSelector"></div>
+                    <div class="roulette-strip" id="rouletteStrip"></div>
+                    <div class="fast-open-results" id="fastOpenResults"></div>
+                </div>
+            </div>
+            <div class="case-controls-wrapper fade-in delay-2">
+                <div class="case-controls glass-panel">
+                    <div class="multi-open">
+                        <button class="active" onclick="setQuantity(1, this)">1</button>
+                        <button onclick="setQuantity(2, this)">2</button>
+                        <button onclick="setQuantity(3, this)">3</button>
+                        <button onclick="setQuantity(5, this)">5</button>
+                        <button onclick="setQuantity(10, this)">10</button>
+                    </div>
+                    <button id="openCaseBtn" class="main-open-btn glow-effect">
+                        Otwórz za <span id="openingCasePriceBtn">0,00</span>zł
+                    </button>
+                </div>
+            </div>
+            <h3 class="contents-title fade-in delay-3">Zawartość skrzynki</h3>
+            <div class="contents-grid-new stagger-animate" id="caseContentsGrid"></div>
+        </section>
+
+        <section id="view-upgrader" class="view">
+            <div class="hero fade-in">
+                <h2 style="color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.5);">Skin Upgrader</h2>
+                <p>Poświęć słabe skiny, by zdobyć legendy. Marża serwera: 5%</p>
+            </div>
             
-            <div class="section">
-                <div class="section-title">TWÓJ WKŁAD</div>
-                <div class="input-details">
-                    <span class="plus-icon">+</span>
-                    <div class="value-text">0.00 zł</div>
-                    
-                    <div class="doplata-row">
-                        <span>Dopłata z salda: <span class="doplata-highlight">0 zł</span></span>
-                        <div class="slider-track"></div>
+            <div class="upgrader-arena glass-panel fade-in delay-1">
+                <div class="up-side">
+                    <h3 class="up-title text-muted">Twój wkład</h3>
+                    <div class="up-slot" id="up-input-slot" onclick="upInput = null; updateUpgrader()">+</div>
+                    <div class="up-price" id="up-input-price">0.00 zł</div>
+                    <div class="up-slider-box">
+                        <label>Dopłata z salda: <b id="up-slider-val" style="color:var(--accent-cyan)">0</b> zł</label>
+                        <input type="range" id="up-slider" min="0" max="1000" step="1" value="0" oninput="updateUpgrader()">
                     </div>
-                    
-                    <span class="plus-icon">▼</span>
-                    <div class="value-text">0.00%</div>
-                    <div class="stats-text">Wkład: 0.00 / Cel: 0.00</div>
-                    
-                    <div class="multipliers">
-                        <button class="multi-btn">1.5x</button>
-                        <button class="multi-btn">3x</button>
-                        <button class="multi-btn">5x</button>
-                        <button class="multi-btn">10x</button>
+                </div>
+
+                <div class="up-center">
+                    <div class="up-wheel-container">
+                        <div class="up-marker">▼</div>
+                        <div class="up-wheel" id="up-wheel">
+                            <div class="up-wheel-inner"></div>
+                            <div class="up-chance-text" id="up-chance-text">0.00%</div>
+                        </div>
                     </div>
+                    <div class="up-ratios text-muted" id="up-ratios">Wkład: 0.00 / Cel: 0.00</div>
+                    <div class="up-multipliers">
+                        <button onclick="autoPickTarget(1.5)">1.5x</button>
+                        <button onclick="autoPickTarget(3)">3x</button>
+                        <button onclick="autoPickTarget(5)">5x</button>
+                        <button onclick="autoPickTarget(10)">10x</button>
+                    </div>
+                    <button class="glow-effect" id="up-btn" onclick="spinUpgrader()">ULEPSZ SKIN</button>
+                </div>
 
-                    <button class="btn-upgrade">ULEPSZ SKIN</button>
+                <div class="up-side">
+                    <h3 class="up-title text-muted">Cel (Do zdobycia)</h3>
+                    <div class="up-slot target-slot" id="up-target-slot" onclick="upTarget = null; updateUpgrader()">+</div>
+                    <div class="up-price text-purple" id="up-target-price">0.00 zł</div>
                 </div>
             </div>
 
-            <div class="section">
-                <div class="section-title">CEL (DO ZDOBYCIA)</div>
-                <div class="input-details">
-                    <span class="plus-icon">+</span>
-                    <div class="value-text">0.00 zł</div>
+            <div class="up-inventories fade-in delay-2">
+                <div class="up-inv-col glass-panel">
+                    <h3>Wybierz przedmiot z ekwipunku</h3>
+                    <div class="contents-grid-new" id="up-user-inv"></div>
+                </div>
+                <div class="up-inv-col glass-panel">
+                    <h3>Wybierz cel ze sklepu</h3>
+                    <div class="contents-grid-new" id="up-store-inv"></div>
                 </div>
             </div>
+        </section>
 
-            <div class="section">
-                <div class="section-title">WYBIERZ PRZEDMIOT Z EKWIPUNKU</div>
-                <div class="inventory-empty">
-                    Brak przedmiotów. Otwórz skrzynki!
+        <section id="view-inventory" class="view">
+            <div class="inventory-header fade-in">
+                <h2>Twój Ekwipunek</h2>
+                <div class="inventory-stats glass-panel">
+                    <span>Łączna wartość: <b id="totalValue" class="neon-text-green">0.00 zł</b></span>
+                    <button class="sell-all-btn glow-effect-red" onclick="sellAll()">Sprzedaj wszystko</button>
                 </div>
             </div>
+            <div class="contents-grid-new stagger-animate" id="inventoryGrid"></div>
+        </section>
+    </main>
 
+    <div id="resultModal" class="modal-overlay">
+        <div class="modal-content glass-panel">
+            <div class="modal-header" id="modalTitle">Wynik</div>
+            <div id="modalItems" class="modal-items-grid"></div>
+            <div class="modal-summary" id="modalSummary"></div>
+            <button class="modal-close-btn glow-effect" onclick="closeModal()">ZAMKNIJ</button>
         </div>
     </div>
 
+    <script src="script.js"></script>
 </body>
 </html>
