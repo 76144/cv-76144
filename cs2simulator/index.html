@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseSimulator Pro - Ultra Edition</title>
+    <title>CaseSimulator Pro - Ostateczna Wersja</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,7 +23,7 @@
             <button onclick="switchTab('inventory')" class="nav-btn">Ekwipunek</button>
         </nav>
         <div class="wallet pulse-glow">
-            <span id="balance">1000.00</span> zł
+            <span id="balance">5000.00</span> zł
         </div>
     </header>
 
@@ -31,7 +31,7 @@
         <section id="view-cases" class="view active">
             <div class="hero fade-in">
                 <h2>Wybierz skrzynkę do otwarcia</h2>
-                <p>Przygotuj się na najlepsze dropy.</p>
+                <p>Czysta matematyka (EV) i marża 10%. Przygotuj się na dropy!</p>
             </div>
             <div class="cases-grid stagger-animate" id="casesGrid"></div>
         </section>
@@ -72,7 +72,7 @@
         <section id="view-upgrader" class="view">
             <div class="hero fade-in" style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 240, 255, 0.05) 100%);">
                 <h2 style="color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.5);">Skin Upgrader</h2>
-                <p>Wymieniaj wiele skinów naraz. Kliknij w slot, aby wyczyścić wybór.</p>
+                <p>Wymieniaj wiele skinów naraz. Kliknij w duży kwadrat (slot), aby wyczyścić wybór.</p>
             </div>
             
             <div class="upgrader-arena glass-panel fade-in delay-1">
@@ -82,7 +82,7 @@
                     <div class="up-price" id="up-input-price">0.00 zł</div>
                     <div class="up-slider-box">
                         <label>Dopłata z salda: <b id="up-slider-val" style="color:var(--accent-cyan)">0</b> zł</label>
-                        <input type="range" id="up-slider" min="0" max="1000" step="1" value="0" oninput="updateUpgrader()">
+                        <input type="range" id="up-slider" min="0" max="5000" step="1" value="0" oninput="updateUpgrader()">
                     </div>
                 </div>
 
