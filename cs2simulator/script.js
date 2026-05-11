@@ -1,49 +1,67 @@
-let balance = 1000.00;
+let balance = 5000.00; // Zwiększony budżet startowy
 let inventory = [];
 let currentCase = null;
 let isSpinning = false;
 let openQuantity = 1;
 
-// --- UPGRADER STATE (TABLICE) ---
+// --- UPGRADER STATE ---
 let upInputs = [];
 let upTargets = [];
 let upBalance = 0;
-const HOUSE_EDGE = 0.05; // 5% marża
+const HOUSE_EDGE = 0.10; // Marża ustawiona na 10% (Rynkowa)
 
+// Potezny system renderujący świetne obrazki zastępcze
 const generateStyleImage = (text, hexColor) => {
     const color = hexColor.replace('#', '');
     return `https://placehold.co/200x150/0f172a/${color}?text=${encodeURIComponent(text)}&font=Montserrat`;
 };
 
+// ============================================
+// BAZA SKRZYNEK (Oparta na EV i Marży 10%)
+// ============================================
 const casesData = [
     {
-        id: 'neon',
-        name: 'Neon Strike Case',
-        price: 15.00,
-        img: generateStyleImage('NEON CASE', '#00f0ff'),
+        id: 'cyber_neon',
+        name: 'Cyber Neon Case',
+        price: 81.90,
+        img: generateStyleImage('CYBER NEON', '#00f0ff'),
         items: [
-            { name: 'Cyberpunk', weapon: 'Karambit', price: 5500.00, chance: 0.260, rarity: '#ffd700', wear: 'FN', wearColor: '#eab308', img: generateStyleImage('Karambit', '#ffd700') },
-            { name: 'Laser', weapon: 'AK-47', price: 250.00, chance: 0.640, rarity: '#eb4b4b', wear: 'MW', wearColor: '#3b82f6', img: generateStyleImage('AK-47', '#eb4b4b') },
-            { name: 'Overdrive', weapon: 'M4A4', price: 180.00, chance: 0.640, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('M4A4', '#eb4b4b') },
-            { name: 'Synthwave', weapon: 'AWP', price: 75.00, chance: 3.200, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('AWP', '#d32ce6') },
-            { name: 'Glitch', weapon: 'Glock-18', price: 30.00, chance: 3.200, rarity: '#d32ce6', wear: 'BS', wearColor: '#ef4444', img: generateStyleImage('Glock', '#d32ce6') },
-            { name: 'Neon Rider', weapon: 'MAC-10', price: 12.00, chance: 15.980, rarity: '#8847ff', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('MAC-10', '#8847ff') },
-            { name: 'Matrix', weapon: 'USP-S', price: 8.50, chance: 15.980, rarity: '#8847ff', wear: 'MW', wearColor: '#3b82f6', img: generateStyleImage('USP-S', '#8847ff') },
-            { name: 'Circuit', weapon: 'P250', price: 1.50, chance: 60.100, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('P250', '#4b69ff') },
-            { name: 'Byte', weapon: 'MP9', price: 1.10, chance: 60.100, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('MP9', '#4b69ff') }
+            { name: 'Doppler (Phase 2)', weapon: 'Karambit', price: 11000.00, chance: 0.25, rarity: '#ffd700', wear: 'FN', wearColor: '#eab308', img: generateStyleImage('Karambit', '#ffd700') },
+            { name: 'Neon Rider', weapon: 'AK-47', price: 500.00, chance: 2.00, rarity: '#eb4b4b', wear: 'FN', wearColor: '#22c55e', img: generateStyleImage('AK-47', '#eb4b4b') },
+            { name: 'Cyber Security', weapon: 'M4A4', price: 150.00, chance: 5.00, rarity: '#d32ce6', wear: 'FN', wearColor: '#22c55e', img: generateStyleImage('M4A4', '#d32ce6') },
+            { name: 'Neo-Noir', weapon: 'AWP', price: 130.00, chance: 10.00, rarity: '#d32ce6', wear: 'MW', wearColor: '#3b82f6', img: generateStyleImage('AWP', '#d32ce6') },
+            { name: 'Neon Rider', weapon: 'MAC-10', price: 40.00, chance: 20.00, rarity: '#d32ce6', wear: 'MW', wearColor: '#3b82f6', img: generateStyleImage('MAC-10', '#d32ce6') },
+            { name: 'Vogue', weapon: 'Glock-18', price: 12.00, chance: 62.75, rarity: '#8847ff', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('Glock-18', '#8847ff') }
         ]
     },
     {
-        id: 'dark',
-        name: 'Dark Matter Case',
-        price: 12.00,
-        img: generateStyleImage('DARK CASE', '#8a2be2'),
+        id: 'awp_masters',
+        name: 'AWP Masters Case',
+        price: 406.90,
+        img: generateStyleImage('AWP MASTERS', '#eb4b4b'),
         items: [
-            { name: 'Void', weapon: 'Butterfly', price: 8000.00, chance: 0.260, rarity: '#ffd700', wear: 'FN', wearColor: '#eab308', img: generateStyleImage('Butterfly', '#ffd700') },
-            { name: 'Abyss', weapon: 'Desert Eagle', price: 150.00, chance: 0.640, rarity: '#eb4b4b', wear: 'FN', wearColor: '#22c55e', img: generateStyleImage('Deagle', '#eb4b4b') },
-            { name: 'Phantom', weapon: 'M4A1-S', price: 55.00, chance: 3.200, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('M4A1-S', '#d32ce6') },
-            { name: 'Shadow', weapon: 'CZ75', price: 8.00, chance: 15.980, rarity: '#8847ff', wear: 'MW', wearColor: '#3b82f6', img: generateStyleImage('CZ75', '#8847ff') },
-            { name: 'Dust', weapon: 'Nova', price: 0.80, chance: 79.920, rarity: '#4b69ff', wear: 'BS', wearColor: '#ef4444', img: generateStyleImage('Nova', '#4b69ff') }
+            { name: 'Dragon Lore', weapon: 'AWP', price: 35000.00, chance: 0.10, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('Dragon Lore', '#eb4b4b') },
+            { name: 'Desert Hydra', weapon: 'AWP', price: 8500.00, chance: 0.50, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('Desert Hydra', '#eb4b4b') },
+            { name: 'Fade', weapon: 'AWP', price: 4000.00, chance: 1.50, rarity: '#eb4b4b', wear: 'FN', wearColor: '#22c55e', img: generateStyleImage('Fade', '#eb4b4b') },
+            { name: 'Lightning Strike', weapon: 'AWP', price: 2500.00, chance: 3.00, rarity: '#eb4b4b', wear: 'FN', wearColor: '#22c55e', img: generateStyleImage('Lightning Strike', '#eb4b4b') },
+            { name: 'Oni Taiji', weapon: 'AWP', price: 1200.00, chance: 5.00, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('Oni Taiji', '#eb4b4b') },
+            { name: 'Asiimov', weapon: 'AWP', price: 500.00, chance: 15.00, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('Asiimov', '#eb4b4b') },
+            { name: 'Chromatic Aberration', weapon: 'AWP', price: 45.00, chance: 25.00, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('Chromatic', '#d32ce6') },
+            { name: 'Atheris', weapon: 'AWP', price: 15.00, chance: 49.90, rarity: '#8847ff', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('Atheris', '#8847ff') }
+        ]
+    },
+    {
+        id: 'budget_chrome',
+        name: 'Budget Chrome Case',
+        price: 14.50,
+        img: generateStyleImage('CHROME CASE', '#94a3b8'),
+        items: [
+            { name: 'Vanilla', weapon: 'Navaja Knife', price: 400.00, chance: 0.25, rarity: '#ffd700', wear: 'BS', wearColor: '#ef4444', img: generateStyleImage('Navaja', '#ffd700') },
+            { name: 'Printstream', weapon: 'Desert Eagle', price: 150.00, chance: 1.00, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('Deagle', '#eb4b4b') },
+            { name: 'Mecha Industries', weapon: 'M4A1-S', price: 80.00, chance: 4.00, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('M4A1-S', '#eb4b4b') },
+            { name: 'Ice Coaled', weapon: 'AK-47', price: 30.00, chance: 10.00, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('AK-47', '#d32ce6') },
+            { name: 'Steel Disruption', weapon: 'Glock-18', price: 10.00, chance: 25.00, rarity: '#8847ff', wear: 'FN', wearColor: '#22c55e', img: generateStyleImage('Glock-18', '#8847ff') },
+            { name: 'Lead Conduit', weapon: 'USP-S', price: 3.00, chance: 59.75, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('USP-S', '#4b69ff') }
         ]
     }
 ];
@@ -52,16 +70,13 @@ const siteStoreItems = [];
 casesData.forEach(caseObj => {
     caseObj.items.forEach(item => {
         if(!siteStoreItems.find(i => i.name === item.name && i.weapon === item.weapon)) {
-            // Dodajemy sztuczne id dla sklepu, zeby latwiej identyfikowac wiele takich samych przedmiotow
             siteStoreItems.push({...item, storeId: item.name + item.weapon});
         }
     });
 });
 siteStoreItems.sort((a, b) => b.price - a.price);
 
-function generateSafeId() {
-    return 'item_' + Date.now().toString() + '_' + Math.random().toString(36).substring(2, 9);
-}
+function generateSafeId() { return 'item_' + Date.now().toString() + '_' + Math.random().toString(36).substring(2, 9); }
 
 function animateValue(obj, start, end, duration) {
     let startTimestamp = null;
@@ -203,26 +218,19 @@ function spinRoulette() {
     }
 }
 
-// === SYSTEM UPGRADERA (WIELE PRZEDMIOTÓW) ===
-
+// === SYSTEM UPGRADERA ===
 window.clearUpInputs = function() { upInputs = []; updateUpgrader(); renderUpgraderInvs(); }
 window.clearUpTargets = function() { upTargets = []; updateUpgrader(); renderUpgraderInvs(); }
 
 window.toggleUpInput = function(uniqueId) {
-    if(upInputs.find(i => i.uniqueId === uniqueId)) {
-        upInputs = upInputs.filter(i => i.uniqueId !== uniqueId);
-    } else {
-        const item = inventory.find(i => i.uniqueId === uniqueId);
-        if(item) upInputs.push(item);
-    }
+    if(upInputs.find(i => i.uniqueId === uniqueId)) upInputs = upInputs.filter(i => i.uniqueId !== uniqueId);
+    else { const item = inventory.find(i => i.uniqueId === uniqueId); if(item) upInputs.push(item); }
     updateUpgrader(); renderUpgraderInvs();
 }
 
 window.toggleUpTarget = function(storeId) {
     const item = siteStoreItems.find(i => i.storeId === storeId);
-    if(item) {
-        upTargets.push({...item, tempId: Math.random()}); // Pozwala dodać wiele tych samych itemow
-    }
+    if(item) upTargets.push({...item, tempId: Math.random()});
     updateUpgrader(); renderUpgraderInvs();
 }
 
@@ -289,7 +297,7 @@ window.updateUpgrader = function() {
     if(targetPrice > 0 && totalInput > 0) chance = (totalInput / targetPrice) * (1 - HOUSE_EDGE) * 100;
     chance = Math.min(Math.max(chance, 0), 80); 
 
-    const wheelRing = document.getElementById('up-wheel'); // TYLKO OBRĘCZ
+    const wheelRing = document.getElementById('up-wheel');
     document.getElementById('up-chance-text').innerText = chance.toFixed(2) + '%';
     document.getElementById('up-ratios').innerText = `Wkład: ${totalInput.toFixed(2)} / Cel: ${targetPrice.toFixed(2)}`;
 
@@ -331,7 +339,6 @@ window.spinUpgrader = function() {
     chance = Math.min(Math.max(chance, 0), 80);
     if(chance <= 0) return alert('Szansa za mała!');
 
-    // Zabranie srodków graczowi
     balance -= upBalance;
     const inputIds = upInputs.map(i => i.uniqueId);
     inventory = inventory.filter(i => !inputIds.includes(i.uniqueId)); 
@@ -380,7 +387,7 @@ window.spinUpgrader = function() {
     }, 7500); 
 }
 
-// === EKWIPUNEK I SPRZEDAŻ ===
+// === EKWIPUNEK ===
 function renderInventory() {
     const inventoryGrid = document.getElementById('inventoryGrid');
     inventoryGrid.innerHTML = '';
