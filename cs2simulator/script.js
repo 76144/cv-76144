@@ -1,4 +1,4 @@
-let balance = 5000.00; // Zwiększony budżet startowy
+let balance = 5000.00;
 let inventory = [];
 let currentCase = null;
 let isSpinning = false;
@@ -10,14 +10,13 @@ let upTargets = [];
 let upBalance = 0;
 const HOUSE_EDGE = 0.10; // Marża ustawiona na 10% (Rynkowa)
 
-// Potezny system renderujący świetne obrazki zastępcze
 const generateStyleImage = (text, hexColor) => {
     const color = hexColor.replace('#', '');
     return `https://placehold.co/200x150/0f172a/${color}?text=${encodeURIComponent(text)}&font=Montserrat`;
 };
 
 // ============================================
-// BAZA SKRZYNEK (NOWE SKRZYNKI, Oparte na EV i Marży 10%)
+// BAZA SKRZYNEK (Oparte na EV i Marży 10%)
 // ============================================
 const casesData = [
     {
@@ -74,6 +73,7 @@ casesData.forEach(caseObj => {
         }
     });
 });
+// Startowe posortowanie sklepu
 siteStoreItems.sort((a, b) => b.price - a.price);
 
 function generateSafeId() { return 'item_' + Date.now().toString() + '_' + Math.random().toString(36).substring(2, 9); }
@@ -97,6 +97,17 @@ function updateBalanceDisplay() {
     const balanceEl = document.getElementById('balance');
     animateValue(balanceEl, lastBalance, balance, 800);
     lastBalance = balance;
+
+    // DYNAMICZNY SUWAK: Ustawiamy maksymalną wartość suwaka w Upgraderze na aktualne saldo
+    const upSlider = document.getElementById('up-slider');
+    if (upSlider) {
+        upSlider.max = balance;
+        // Jeśli aktualnie wybrana kwota jest wyższa niż nowe saldo, zbijamy ją do maksimum
+        if (parseFloat(upSlider.value) > balance) {
+            upSlider.value = balance;
+            updateUpgrader(); // Przeliczamy szansę
+        }
+    }
 }
 
 function switchTab(tabId) {
@@ -107,6 +118,7 @@ function switchTab(tabId) {
         animatedElements.forEach(el => { el.style.animation = 'none'; el.offsetHeight; el.style.animation = null; });
     });
     document.getElementById(`view-${tabId}`).classList.add('active');
+    
     if(tabId === 'inventory') renderInventory();
     if(tabId === 'upgrader') { renderUpgraderInvs(); updateUpgrader(); }
 }
@@ -139,7 +151,6 @@ function setupCaseOpening(caseObj) {
     document.getElementById('openingCaseName').innerText = `💠 ${caseObj.name}`;
     document.getElementById('openingCasePriceStr').innerText = `${caseObj.price.toFixed(2)}zł`;
     
-    // NAPRAWA: ZGUBIONY ONCLICK DO OTWIERANIA!
     document.getElementById('openCaseBtn').onclick = () => spinRoulette();
 
     const contentsGrid = document.getElementById('caseContentsGrid');
@@ -237,15 +248,24 @@ window.toggleUpTarget = function(storeId) {
     updateUpgrader(); renderUpgraderInvs();
 }
 
+// Funkcja renderująca dolne siatki upgradera z uwzględnieniem sortowania
 window.renderUpgraderInvs = function() {
     const uInv = document.getElementById('up-user-inv');
     const sInv = document.getElementById('up-store-inv');
+    const userSortOrder = document.getElementById('sort-user').value;
+    const storeSortOrder = document.getElementById('sort-store').value;
+
     uInv.innerHTML = ''; sInv.innerHTML = '';
 
     if(inventory.length === 0) {
         uInv.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">Brak przedmiotów.</p>';
     } else {
-        [...inventory].reverse().forEach(item => {
+        // Zastosowanie sortowania do Ekwipunku Upgradera
+        let sortedUserInv = [...inventory];
+        if(userSortOrder === 'desc') sortedUserInv.sort((a,b) => b.price - a.price);
+        else sortedUserInv.sort((a,b) => a.price - b.price);
+
+        sortedUserInv.forEach(item => {
             const isSelected = upInputs.some(i => i.uniqueId === item.uniqueId);
             const card = document.createElement('div');
             card.className = `content-card ${isSelected ? 'selected-input' : ''}`;
@@ -256,7 +276,12 @@ window.renderUpgraderInvs = function() {
         });
     }
 
-    siteStoreItems.forEach(item => {
+    // Zastosowanie sortowania do Sklepu Upgradera
+    let sortedStoreItems = [...siteStoreItems];
+    if(storeSortOrder === 'desc') sortedStoreItems.sort((a,b) => b.price - a.price);
+    else sortedStoreItems.sort((a,b) => a.price - b.price);
+
+    sortedStoreItems.forEach(item => {
         const count = upTargets.filter(i => i.storeId === item.storeId).length;
         const card = document.createElement('div');
         card.className = `content-card ${count > 0 ? 'selected-target' : ''}`;
@@ -307,12 +332,13 @@ window.updateUpgrader = function() {
     wheelRing.style.transition = 'none';
     wheelRing.style.transform = 'rotate(0deg)';
 
+    // IDEALNIE ODCINANA GRAFIKA KOŁA: Użycie słowa 'transparent', aby uniknąć poszarpanych/wystających pikseli
     if(chance > 0) {
-        wheelRing.style.background = `conic-gradient(var(--accent-green) 0% ${chance}%, rgba(255,255,255,0.05) ${chance}% 100%)`;
-        wheelRing.style.boxShadow = `0 0 40px rgba(0, 255, 136, 0.3)`;
+        wheelRing.style.background = `conic-gradient(var(--accent-green) 0% ${chance}%, transparent ${chance}% 100%)`;
+        document.getElementById('up-wheel-container').style.boxShadow = `0 0 40px rgba(0, 255, 136, 0.3)`;
     } else {
-        wheelRing.style.background = `conic-gradient(rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.05) 100%)`;
-        wheelRing.style.boxShadow = `0 0 40px rgba(0, 0, 0, 0.5)`;
+        wheelRing.style.background = `transparent`;
+        document.getElementById('up-wheel-container').style.boxShadow = `0 0 40px rgba(0, 0, 0, 0.5)`;
     }
 }
 
@@ -345,7 +371,7 @@ window.spinUpgrader = function() {
     balance -= upBalance;
     const inputIds = upInputs.map(i => i.uniqueId);
     inventory = inventory.filter(i => !inputIds.includes(i.uniqueId)); 
-    updateBalanceDisplay();
+    updateBalanceDisplay(); // Zaktualizuje również maksymalny suwak
     
     isSpinning = true;
     const btn = document.getElementById('up-btn');
@@ -390,7 +416,7 @@ window.spinUpgrader = function() {
     }, 7500); 
 }
 
-// === WYNIKI I OKIENKA (MODAL) ===
+// === WYNIKI I OKIENKA ===
 window.showResultModal = function(wonItems, totalCost) {
     const modal = document.getElementById('resultModal');
     const itemsContainer = document.getElementById('modalItems');
@@ -445,8 +471,10 @@ window.showResultModal = function(wonItems, totalCost) {
 }
 
 // === EKWIPUNEK ===
-function renderInventory() {
+window.renderInventory = function() {
     const inventoryGrid = document.getElementById('inventoryGrid');
+    const sortOrder = document.getElementById('sort-main-inv').value;
+    
     inventoryGrid.innerHTML = '';
     const total = inventory.reduce((sum, item) => sum + item.price, 0);
     const totalValEl = document.getElementById('totalValue');
@@ -455,7 +483,15 @@ function renderInventory() {
 
     if(inventory.length === 0) return inventoryGrid.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 18px;">Ekwipunek jest pusty.</p>';
 
-    [...inventory].reverse().forEach((item, index) => {
+    // Zastosowanie sortowania do głównego ekwipunku
+    let sortedInventory = [...inventory];
+    if (sortOrder === 'desc') {
+        sortedInventory.sort((a, b) => b.price - a.price);
+    } else {
+        sortedInventory.sort((a, b) => a.price - b.price);
+    }
+
+    sortedInventory.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'content-card';
         card.style.borderTopColor = item.rarity;
