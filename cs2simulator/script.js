@@ -4,36 +4,91 @@ let currentCase = null;
 let isSpinning = false;
 let openQuantity = 1;
 
-// BAZA DANYCH - UŻYWAMY SELF-HOSTOWANYCH PLIKÓW Z FOLDERU /IMG
+// Funkcja generująca stylowe grafiki zastępcze, skoro omijamy Steam
+const generateStyleImage = (text, hexColor) => {
+    // Usunięcie # z koloru
+    const color = hexColor.replace('#', '');
+    return `https://placehold.co/200x150/0f172a/${color}?text=${encodeURIComponent(text)}&font=Montserrat`;
+};
+
+// BAZA DANYCH
 const casesData = [
     {
-        id: 'revolution',
-        name: 'Revolution Case',
-        price: 12.50,
-        img: 'img/case_revolution.png', // Relatywna ścieżka do Twojego folderu
+        id: 'neon',
+        name: 'Neon Strike Case',
+        price: 15.00,
+        img: generateStyleImage('NEON CASE', '#00f0ff'),
         items: [
-            // Czerwone
-            { name: 'Head Shot', weapon: 'AK-47', price: 180.00, chance: 0.640, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: 'img/ak47_headshot.png' },
-            { name: 'Temukau', weapon: 'M4A4', price: 160.00, chance: 0.640, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: 'img/m4a4_temukau.png' },
-            // Różowe
-            { name: 'Duality', weapon: 'AWP', price: 60.00, chance: 3.200, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: 'img/awp_duality.png' },
-            // Niebieskie
-            { name: 'Featherweight', weapon: 'MP9', price: 1.20, chance: 95.52, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: 'img/mp9_featherweight.png' }
+            { name: 'Cyberpunk', weapon: 'Karambit', price: 5500.00, chance: 0.260, rarity: '#ffd700', wear: 'FN', wearColor: '#eab308', img: generateStyleImage('Karambit', '#ffd700') },
+            { name: 'Laser', weapon: 'AK-47', price: 250.00, chance: 0.640, rarity: '#eb4b4b', wear: 'MW', wearColor: '#3b82f6', img: generateStyleImage('AK-47', '#eb4b4b') },
+            { name: 'Overdrive', weapon: 'M4A4', price: 180.00, chance: 0.640, rarity: '#eb4b4b', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('M4A4', '#eb4b4b') },
+            { name: 'Synthwave', weapon: 'AWP', price: 75.00, chance: 3.200, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('AWP', '#d32ce6') },
+            { name: 'Glitch', weapon: 'Glock-18', price: 30.00, chance: 3.200, rarity: '#d32ce6', wear: 'BS', wearColor: '#ef4444', img: generateStyleImage('Glock', '#d32ce6') },
+            { name: 'Neon Rider', weapon: 'MAC-10', price: 12.00, chance: 15.980, rarity: '#8847ff', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('MAC-10', '#8847ff') },
+            { name: 'Matrix', weapon: 'USP-S', price: 8.50, chance: 15.980, rarity: '#8847ff', wear: 'MW', wearColor: '#3b82f6', img: generateStyleImage('USP-S', '#8847ff') },
+            { name: 'Circuit', weapon: 'P250', price: 1.50, chance: 60.100, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('P250', '#4b69ff') },
+            { name: 'Byte', weapon: 'MP9', price: 1.10, chance: 60.100, rarity: '#4b69ff', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('MP9', '#4b69ff') }
+        ]
+    },
+    {
+        id: 'dark',
+        name: 'Dark Matter Case',
+        price: 12.00,
+        img: generateStyleImage('DARK CASE', '#8a2be2'),
+        items: [
+            { name: 'Void', weapon: 'Butterfly', price: 8000.00, chance: 0.260, rarity: '#ffd700', wear: 'FN', wearColor: '#eab308', img: generateStyleImage('Butterfly', '#ffd700') },
+            { name: 'Abyss', weapon: 'Desert Eagle', price: 150.00, chance: 0.640, rarity: '#eb4b4b', wear: 'FN', wearColor: '#22c55e', img: generateStyleImage('Deagle', '#eb4b4b') },
+            { name: 'Phantom', weapon: 'M4A1-S', price: 55.00, chance: 3.200, rarity: '#d32ce6', wear: 'FT', wearColor: '#eab308', img: generateStyleImage('M4A1-S', '#d32ce6') },
+            { name: 'Shadow', weapon: 'CZ75', price: 8.00, chance: 15.980, rarity: '#8847ff', wear: 'MW', wearColor: '#3b82f6', img: generateStyleImage('CZ75', '#8847ff') },
+            { name: 'Dust', weapon: 'Nova', price: 0.80, chance: 79.920, rarity: '#4b69ff', wear: 'BS', wearColor: '#ef4444', img: generateStyleImage('Nova', '#4b69ff') }
         ]
     }
 ];
 
-// Cała reszta logiki pozostaje bez zmian
+// FUNKCJA: Płynne odliczanie pieniędzy
+function animateValue(obj, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        // Easing wychodzący (zwalnia pod koniec)
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentVal = start + (end - start) * easeOut;
+        obj.innerHTML = currentVal.toFixed(2);
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+            obj.innerHTML = end.toFixed(2); // Upewnienie się, że kończy idealnie
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+let lastBalance = balance;
+function updateBalanceDisplay() {
+    const balanceEl = document.getElementById('balance');
+    animateValue(balanceEl, lastBalance, balance, 800);
+    lastBalance = balance;
+}
 
 function switchTab(tabId) {
     if (isSpinning) return;
-    document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.remove('active');
+        // Reset animacji żeby działały po każdym wejściu
+        const animatedElements = view.querySelectorAll('.fade-in, .stagger-animate');
+        animatedElements.forEach(el => {
+            el.style.animation = 'none';
+            el.offsetHeight; /* trigger reflow */
+            el.style.animation = null; 
+        });
+    });
     document.getElementById(`view-${tabId}`).classList.add('active');
     if(tabId === 'inventory') renderInventory();
 }
 
 function init() {
-    updateBalance();
+    updateBalanceDisplay();
     const casesGrid = document.getElementById('casesGrid');
     casesGrid.innerHTML = '';
     
@@ -44,14 +99,10 @@ function init() {
         card.innerHTML = `
             <img src="${c.img}" class="case-img">
             <h3>${c.name}</h3>
-            <p style="color: var(--accent); font-weight: bold;">${c.price.toFixed(2)} zł</p>
+            <p>${c.price.toFixed(2)} zł</p>
         `;
         casesGrid.appendChild(card);
     });
-}
-
-function updateBalance() {
-    document.getElementById('balance').innerText = balance.toFixed(2);
 }
 
 window.setQuantity = function(q, btnElement) {
@@ -67,7 +118,7 @@ function setupCaseOpening(caseObj) {
     currentCase = caseObj;
     setQuantity(1, document.querySelector('.multi-open button')); 
 
-    document.getElementById('openingCaseName').innerText = `👑 ${caseObj.name}`;
+    document.getElementById('openingCaseName').innerText = `💠 ${caseObj.name}`;
     document.getElementById('openingCasePriceStr').innerText = `${caseObj.price.toFixed(2)}zł`;
     
     document.getElementById('openCaseBtn').onclick = () => spinRoulette();
@@ -76,7 +127,7 @@ function setupCaseOpening(caseObj) {
     contentsGrid.innerHTML = '';
     caseObj.items.forEach(item => {
         contentsGrid.innerHTML += `
-            <div class="content-card" style="border-top-color: ${item.rarity}">
+            <div class="content-card" style="border-top-color: ${item.rarity}; box-shadow: 0 5px 15px ${item.rarity}20;">
                 <div class="badge-wear" style="background: ${item.wearColor}">${item.wear}</div>
                 <div class="badge-chance">${item.chance.toFixed(3)}%</div>
                 <img src="${item.img}" class="content-img">
@@ -121,12 +172,14 @@ function showResultModal(wonItems, totalCost) {
     itemsContainer.innerHTML = '';
     let totalValue = 0;
 
-    wonItems.forEach(item => {
+    wonItems.forEach((item, index) => {
         totalValue += item.price;
+        // Dodany delay (animacja pojawiania się po kolei)
         itemsContainer.innerHTML += `
-            <div class="modal-item" style="border-bottom-color: ${item.rarity}">
+            <div class="modal-item" style="border-bottom-color: ${item.rarity}; animation-delay: ${index * 0.1}s">
                 <img src="${item.img}">
-                <p>${item.weapon} | ${item.name}</p>
+                <p>${item.weapon}</p>
+                <p style="color: #94a3b8; font-size: 11px; margin: 0 0 5px 0;">${item.name}</p>
                 <span>${item.price.toFixed(2)} zł</span>
             </div>
         `;
@@ -137,20 +190,22 @@ function showResultModal(wonItems, totalCost) {
     let profitColor = '';
 
     if (profit > 0) {
-        profitText = `Jesteś na plus ${profit.toFixed(2)} zł! 🤑`;
-        profitColor = '#22c55e'; 
+        profitText = `JESTEŚ NA PLUS +${profit.toFixed(2)} zł! 🚀`;
+        profitColor = 'var(--accent-green)'; 
     } else if (profit < 0) {
-        profitText = `Jesteś stratny ${Math.abs(profit).toFixed(2)} zł. 📉`;
-        profitColor = '#ef4444'; 
+        profitText = `STRATA ${Math.abs(profit).toFixed(2)} zł. 📉`;
+        profitColor = 'var(--accent-red)'; 
     } else {
-        profitText = `Wyszedłeś na zero. ⚖️`;
-        profitColor = '#94a3b8'; 
+        profitText = `WYSZEDŁEŚ NA ZERO. ⚖️`;
+        profitColor = 'var(--text-muted)'; 
     }
 
     summary.innerHTML = `
-        <p>Wydano na klucze/skrzynki: <b style="color: #ef4444">${totalCost.toFixed(2)} zł</b></p>
-        <p>Wartość zdobytych przedmiotów: <b style="color: #22c55e">${totalValue.toFixed(2)} zł</b></p>
-        <p style="color: ${profitColor}; font-size: 18px; font-weight: bold; margin-top: 15px;">${profitText}</p>
+        <p style="color: var(--text-muted)">Wydano: <b style="color: var(--accent-red)">${totalCost.toFixed(2)} zł</b></p>
+        <p style="color: var(--text-muted)">Zdobyto: <b style="color: var(--accent-green)">${totalValue.toFixed(2)} zł</b></p>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="color: ${profitColor}; font-size: 20px; font-weight: bold; font-family: 'Rajdhani', sans-serif;">${profitText}</p>
+        </div>
     `;
 
     modal.classList.add('active');
@@ -169,11 +224,12 @@ function spinRoulette() {
     }
     
     balance -= totalCost;
-    updateBalance();
+    updateBalanceDisplay();
     
     isSpinning = true;
     const btn = document.getElementById('openCaseBtn');
     btn.disabled = true;
+    btn.innerHTML = 'LOSOWANIE...';
 
     if (openQuantity === 1) {
         document.getElementById('fastOpenResults').style.display = 'none';
@@ -200,17 +256,18 @@ function spinRoulette() {
         rouletteStrip.style.transform = 'translateX(0)';
         rouletteStrip.offsetHeight; 
 
-        const itemWidth = 150; 
+        const itemWidth = 160; // 150px szerokosci + margin
         const containerWidth = document.querySelector('.roulette-window').offsetWidth;
-        const randomOffset = Math.floor(Math.random() * 120) - 60; 
+        const randomOffset = Math.floor(Math.random() * 100) - 50; 
         const stopPosition = (winningIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2) + randomOffset;
 
-        rouletteStrip.style.transition = 'transform 6s cubic-bezier(0.15, 0.05, 0.1, 1)';
+        rouletteStrip.style.transition = 'transform 6s cubic-bezier(0.1, 0, 0.1, 1)'; // Bardzo płynne zwalnianie
         rouletteStrip.style.transform = `translateX(-${stopPosition}px)`;
 
         setTimeout(() => {
             isSpinning = false;
             btn.disabled = false;
+            btn.innerHTML = `Otwórz za <span id="openingCasePriceBtn">${(currentCase.price * openQuantity).toFixed(2)}</span>zł`;
             inventory.push({ ...wonItem, uniqueId: generateSafeId() });
             showResultModal([wonItem], totalCost);
         }, 6500);
@@ -234,18 +291,19 @@ function spinRoulette() {
         wonItems.forEach((item, index) => {
             setTimeout(() => {
                 fastContainer.innerHTML += `
-                    <div class="fast-open-item" style="border-bottom-color: ${item.rarity}">
+                    <div class="fast-open-item" style="border-bottom-color: ${item.rarity}; box-shadow: 0 0 20px ${item.rarity}40;">
                         <img src="${item.img}">
                     </div>
                 `;
-            }, index * 100); 
+            }, index * 120); 
         });
 
         setTimeout(() => {
             isSpinning = false;
             btn.disabled = false;
+            btn.innerHTML = `Otwórz za <span id="openingCasePriceBtn">${(currentCase.price * openQuantity).toFixed(2)}</span>zł`;
             showResultModal(wonItems, totalCost);
-        }, wonItems.length * 100 + 500);
+        }, wonItems.length * 120 + 800);
     }
 }
 
@@ -254,25 +312,32 @@ function renderInventory() {
     inventoryGrid.innerHTML = '';
     
     const total = inventory.reduce((sum, item) => sum + item.price, 0);
-    document.getElementById('totalValue').innerText = total.toFixed(2) + ' zł';
+    // Animacja przy zmianie total value
+    const totalValEl = document.getElementById('totalValue');
+    animateValue(totalValEl, parseFloat(totalValEl.innerText) || 0, total, 800);
+    totalValEl.innerText = total.toFixed(2) + ' zł';
 
     if(inventory.length === 0) {
-        inventoryGrid.innerHTML = '<p style="color: #94a3b8; grid-column: 1/-1; text-align: center; margin-top: 20px;">Twój ekwipunek jest pusty.</p>';
+        inventoryGrid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 18px;">Twój ekwipunek jest pusty. Otwórz skrzynkę, aby coś zdobyć!</p>';
         return;
     }
 
-    [...inventory].reverse().forEach(item => {
+    [...inventory].reverse().forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'content-card';
         card.style.borderTopColor = item.rarity;
+        card.style.boxShadow = `0 5px 15px ${item.rarity}20`;
+        // Dodanie opóźnienia do animacji dla każdego elementu
+        card.style.animation = `slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${index * 0.05}s backwards`;
+        
         card.innerHTML = `
             <div class="badge-wear" style="background: ${item.wearColor}">${item.wear}</div>
             <img src="${item.img}" class="content-img">
             <div class="content-info">
                 <p class="content-name">${item.name}</p>
                 <p class="content-weapon">${item.weapon}</p>
-                <div class="content-price" style="margin-bottom: 10px;">${item.price.toFixed(2)}zł</div>
-                <button class="sell-btn" onclick="sellItem('${item.uniqueId}', ${item.price})">Sprzedaj</button>
+                <div class="content-price" style="margin-bottom: 15px;">${item.price.toFixed(2)}zł</div>
+                <button class="sell-btn" onclick="sellItem('${item.uniqueId}', ${item.price})">SPRZEDAJ</button>
             </div>
         `;
         inventoryGrid.appendChild(card);
@@ -282,7 +347,7 @@ function renderInventory() {
 window.sellItem = function(uniqueId, price) {
     inventory = inventory.filter(item => item.uniqueId !== uniqueId);
     balance += price;
-    updateBalance();
+    updateBalanceDisplay();
     renderInventory();
 }
 
@@ -291,7 +356,7 @@ window.sellAll = function() {
     const total = inventory.reduce((sum, item) => sum + item.price, 0);
     balance += total;
     inventory = [];
-    updateBalance();
+    updateBalanceDisplay();
     renderInventory();
 }
 
