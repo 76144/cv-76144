@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
     <title>CaseSimulator Pro - Ultra Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -41,10 +40,12 @@
             <button class="back-btn" onclick="switchTab('cases')">
                 <span class="arrow">&lt;</span> Powrót do skrzynek
             </button>
+            
             <div class="case-header fade-in">
                 <h2 id="openingCaseName" class="neon-text">Nazwa Skrzynki</h2>
                 <p class="case-price-subtitle" id="openingCasePriceStr">0,00zł</p>
             </div>
+            
             <div class="roulette-wrapper fade-in delay-1">
                 <div class="roulette-window glass-panel" id="rouletteWindow">
                     <div class="roulette-selector" id="rouletteSelector"></div>
@@ -52,6 +53,7 @@
                     <div class="fast-open-results" id="fastOpenResults"></div>
                 </div>
             </div>
+            
             <div class="case-controls-wrapper fade-in delay-2">
                 <div class="case-controls glass-panel">
                     <div class="multi-open">
@@ -66,12 +68,13 @@
                     </button>
                 </div>
             </div>
+
             <h3 class="contents-title fade-in delay-3">Zawartość skrzynki</h3>
             <div class="contents-grid-new stagger-animate" id="caseContentsGrid"></div>
         </section>
 
         <section id="view-upgrader" class="view">
-            <div class="hero fade-in">
+            <div class="hero fade-in" style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 240, 255, 0.05) 100%);">
                 <h2 style="color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.5);">Skin Upgrader</h2>
                 <p>Poświęć słabe skiny, by zdobyć legendy. Marża serwera: 5%</p>
             </div>
@@ -138,10 +141,10 @@
 
     <div id="resultModal" class="modal-overlay">
         <div class="modal-content glass-panel">
-            <div class="modal-header" id="modalTitle">Wynik</div>
+            <div class="modal-header" id="modalTitle">Wynik otwarcia</div>
             <div id="modalItems" class="modal-items-grid"></div>
             <div class="modal-summary" id="modalSummary"></div>
-            <button class="modal-close-btn glow-effect" onclick="closeModal()">ZAMKNIJ</button>
+            <button class="modal-close-btn glow-effect" onclick="closeModal()">NIESAMOWITE, DZIĘKI!</button>
         </div>
     </div>
 
