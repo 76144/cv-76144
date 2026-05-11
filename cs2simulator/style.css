@@ -115,13 +115,12 @@ main { padding: 40px 5%; min-height: 80vh; }
 .fast-open-item img { width: 90px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); }
 
 /* ========================================= */
-/* NOWY UPGRADER: SIATKA, WIELE ITEMÓW I KOŁO */
+/* UPGRADER ARENA */
 /* ========================================= */
 .upgrader-arena { display: flex; justify-content: space-between; align-items: center; padding: 40px; border-radius: 20px; margin-bottom: 40px; flex-wrap: wrap; gap: 30px; }
 .up-side { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 280px; }
 .up-title { margin: 0; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-/* Nowy wygląd slotu wspierający miniaturowe siatki */
 .up-slot { 
     width: 100%; height: 180px; background: rgba(0,0,0,0.5); border: 2px dashed var(--glass-border); 
     border-radius: 16px; display: flex; flex-wrap: wrap; align-content: flex-start; justify-content: center;
@@ -133,10 +132,7 @@ main { padding: 40px 5%; min-height: 80vh; }
 .up-slot::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
 .up-slot:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); transform: scale(1.02); }
 .target-slot:hover { border-color: var(--accent-purple); color: var(--accent-purple); }
-
-/* Klasa dla małych miniaturek dodanych do slota */
 .mini-skin { width: 50px; height: 40px; object-fit: contain; background: rgba(0,0,0,0.6); border-radius: 4px; border-bottom: 2px solid; padding: 2px;}
-
 .up-price { font-size: 32px; font-weight: bold; color: var(--accent-green); text-shadow: 0 0 15px rgba(0,255,136,0.3); }
 
 .up-slider-box { width: 100%; text-align: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; }
