@@ -40,12 +40,10 @@
             <button class="back-btn" onclick="switchTab('cases')">
                 <span class="arrow">&lt;</span> Powrót do skrzynek
             </button>
-            
             <div class="case-header fade-in">
                 <h2 id="openingCaseName" class="neon-text">Nazwa Skrzynki</h2>
                 <p class="case-price-subtitle" id="openingCasePriceStr">0,00zł</p>
             </div>
-            
             <div class="roulette-wrapper fade-in delay-1">
                 <div class="roulette-window glass-panel" id="rouletteWindow">
                     <div class="roulette-selector" id="rouletteSelector"></div>
@@ -53,7 +51,6 @@
                     <div class="fast-open-results" id="fastOpenResults"></div>
                 </div>
             </div>
-            
             <div class="case-controls-wrapper fade-in delay-2">
                 <div class="case-controls glass-panel">
                     <div class="multi-open">
@@ -68,7 +65,6 @@
                     </button>
                 </div>
             </div>
-
             <h3 class="contents-title fade-in delay-3">Zawartość skrzynki</h3>
             <div class="contents-grid-new stagger-animate" id="caseContentsGrid"></div>
         </section>
@@ -76,13 +72,13 @@
         <section id="view-upgrader" class="view">
             <div class="hero fade-in" style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 240, 255, 0.05) 100%);">
                 <h2 style="color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.5);">Skin Upgrader</h2>
-                <p>Poświęć słabe skiny, by zdobyć legendy. Marża serwera: 5%</p>
+                <p>Wymieniaj wiele skinów naraz. Kliknij w slot, aby wyczyścić wybór.</p>
             </div>
             
             <div class="upgrader-arena glass-panel fade-in delay-1">
                 <div class="up-side">
                     <h3 class="up-title text-muted">Twój wkład</h3>
-                    <div class="up-slot" id="up-input-slot" onclick="upInput = null; updateUpgrader()">+</div>
+                    <div class="up-slot" id="up-input-slot" onclick="clearUpInputs()" title="Kliknij, aby usunąć wszystkie przedmioty">+</div>
                     <div class="up-price" id="up-input-price">0.00 zł</div>
                     <div class="up-slider-box">
                         <label>Dopłata z salda: <b id="up-slider-val" style="color:var(--accent-cyan)">0</b> zł</label>
@@ -93,8 +89,8 @@
                 <div class="up-center">
                     <div class="up-wheel-container">
                         <div class="up-marker">▼</div>
-                        <div class="up-wheel" id="up-wheel">
-                            <div class="up-wheel-inner"></div>
+                        <div class="up-wheel-ring" id="up-wheel"></div>
+                        <div class="up-wheel-inner">
                             <div class="up-chance-text" id="up-chance-text">0.00%</div>
                         </div>
                     </div>
@@ -105,23 +101,23 @@
                         <button onclick="autoPickTarget(5)">5x</button>
                         <button onclick="autoPickTarget(10)">10x</button>
                     </div>
-                    <button class="glow-effect" id="up-btn" onclick="spinUpgrader()">ULEPSZ SKIN</button>
+                    <button class="glow-effect" id="up-btn" onclick="spinUpgrader()">ULEPSZ SKINY</button>
                 </div>
 
                 <div class="up-side">
                     <h3 class="up-title text-muted">Cel (Do zdobycia)</h3>
-                    <div class="up-slot target-slot" id="up-target-slot" onclick="upTarget = null; updateUpgrader()">+</div>
+                    <div class="up-slot target-slot" id="up-target-slot" onclick="clearUpTargets()" title="Kliknij, aby usunąć wszystkie cele">+</div>
                     <div class="up-price text-purple" id="up-target-price">0.00 zł</div>
                 </div>
             </div>
 
             <div class="up-inventories fade-in delay-2">
                 <div class="up-inv-col glass-panel">
-                    <h3>Wybierz przedmiot z ekwipunku</h3>
+                    <h3>Wybierz przedmioty z ekwipunku</h3>
                     <div class="contents-grid-new" id="up-user-inv"></div>
                 </div>
                 <div class="up-inv-col glass-panel">
-                    <h3>Wybierz cel ze sklepu</h3>
+                    <h3>Wybierz cele ze sklepu</h3>
                     <div class="contents-grid-new" id="up-store-inv"></div>
                 </div>
             </div>
@@ -141,10 +137,10 @@
 
     <div id="resultModal" class="modal-overlay">
         <div class="modal-content glass-panel">
-            <div class="modal-header" id="modalTitle">Wynik otwarcia</div>
+            <div class="modal-header" id="modalTitle">Wynik</div>
             <div id="modalItems" class="modal-items-grid"></div>
             <div class="modal-summary" id="modalSummary"></div>
-            <button class="modal-close-btn glow-effect" onclick="closeModal()">NIESAMOWITE, DZIĘKI!</button>
+            <button class="modal-close-btn glow-effect" onclick="closeModal()">ZAMKNIJ</button>
         </div>
     </div>
 
