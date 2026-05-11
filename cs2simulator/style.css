@@ -115,6 +115,25 @@ main { padding: 40px 5%; min-height: 80vh; }
 .fast-open-item img { width: 90px; height: 70px; object-fit: contain; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); }
 
 /* ========================================= */
+/* ELEMENTY SORTOWANIA (DROPDOWN) */
+/* ========================================= */
+.glass-select {
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--text-main);
+    border: 1px solid var(--glass-border);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+}
+.glass-select option { background: var(--bg-dark); color: var(--text-main); }
+.inv-col-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 20px; }
+.inv-col-header h3 { margin: 0; color: var(--accent-cyan); font-size: 18px; border: none; padding: 0; }
+
+/* ========================================= */
 /* UPGRADER ARENA */
 /* ========================================= */
 .upgrader-arena { display: flex; justify-content: space-between; align-items: center; padding: 40px; border-radius: 20px; margin-bottom: 40px; flex-wrap: wrap; gap: 30px; }
@@ -140,22 +159,26 @@ main { padding: 40px 5%; min-height: 80vh; }
 .up-slider-box input[type="range"] { width: 100%; -webkit-appearance: none; height: 6px; background: var(--glass-border); border-radius: 5px; outline: none; }
 .up-slider-box input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent-cyan); cursor: pointer; box-shadow: 0 0 10px var(--accent-cyan); }
 
-/* ROZWIĄZANIE KOŁA (Tylko obręcz się kręci) */
+/* IDEALNIE CZYSTE KOŁO RULETKI */
 .up-center { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-.up-wheel-container { position: relative; width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; }
+.up-wheel-container { 
+    position: relative; width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; 
+    border-radius: 50%; border: 6px solid var(--glass-border); box-shadow: 0 0 40px rgba(0, 0, 0, 0.5); 
+    background: rgba(255,255,255,0.05); /* Statyczne tło koła */
+    overflow: hidden; /* Odcina wystające paski */
+}
 .up-marker { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 32px; color: white; z-index: 10; filter: drop-shadow(0 0 10px white); }
 
 .up-wheel-ring { 
-    position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 6px solid var(--glass-border); 
-    background: conic-gradient(rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.05) 100%); 
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5); transition: transform 6s cubic-bezier(0.1, 0, 0.05, 1); 
-    z-index: 1; /* Pod tekstem */
+    position: absolute; width: 100%; height: 100%; border-radius: 50%; 
+    transition: transform 6s cubic-bezier(0.1, 0, 0.05, 1); 
+    z-index: 1; /* Pod tekstem, Kręci się */
 }
 
 .up-wheel-inner { 
-    position: relative; width: 190px; height: 190px; background: var(--bg-dark); 
-    border-radius: 50%; border: 2px solid var(--glass-border); z-index: 2; /* NAD obręczą */
-    display: flex; justify-content: center; align-items: center;
+    position: relative; width: 200px; height: 200px; background: var(--bg-dark); 
+    border-radius: 50%; border: 2px solid var(--glass-border); z-index: 2; /* NAD obręczą, stoi w miejscu */
+    display: flex; justify-content: center; align-items: center; box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
 }
 .up-chance-text { font-size: 48px; font-weight: bold; color: var(--text-main); text-shadow: 0 0 20px rgba(255,255,255,0.5); }
 
@@ -165,8 +188,7 @@ main { padding: 40px 5%; min-height: 80vh; }
 .up-multipliers button:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); transform: translateY(-2px); }
 
 .up-inventories { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-.up-inv-col { padding: 25px; height: 550px; overflow-y: auto; }
-.up-inv-col h3 { text-align: center; margin-top: 0; color: var(--accent-cyan); border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; font-size: 20px; }
+.up-inv-col { padding: 25px; height: 600px; overflow-y: auto; }
 .up-inv-col::-webkit-scrollbar { width: 8px; }
 .up-inv-col::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
 .up-inv-col::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
