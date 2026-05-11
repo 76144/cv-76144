@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="up-center">
-                    <div class="up-wheel-container">
+                    <div class="up-wheel-container" id="up-wheel-container">
                         <div class="up-marker">▼</div>
                         <div class="up-wheel-ring" id="up-wheel"></div>
                         <div class="up-wheel-inner">
@@ -113,11 +113,23 @@
 
             <div class="up-inventories fade-in delay-2">
                 <div class="up-inv-col glass-panel">
-                    <h3>Wybierz przedmioty z ekwipunku</h3>
+                    <div class="inv-col-header">
+                        <h3>Przedmioty z ekwipunku</h3>
+                        <select id="sort-user" class="glass-select" onchange="renderUpgraderInvs()">
+                            <option value="desc">Od najdroższych</option>
+                            <option value="asc">Od najtańszych</option>
+                        </select>
+                    </div>
                     <div class="contents-grid-new" id="up-user-inv"></div>
                 </div>
                 <div class="up-inv-col glass-panel">
-                    <h3>Wybierz cele ze sklepu</h3>
+                    <div class="inv-col-header">
+                        <h3>Wybierz cele ze sklepu</h3>
+                        <select id="sort-store" class="glass-select" onchange="renderUpgraderInvs()">
+                            <option value="desc">Od najdroższych</option>
+                            <option value="asc">Od najtańszych</option>
+                        </select>
+                    </div>
                     <div class="contents-grid-new" id="up-store-inv"></div>
                 </div>
             </div>
@@ -125,7 +137,13 @@
 
         <section id="view-inventory" class="view">
             <div class="inventory-header fade-in">
-                <h2>Twój Ekwipunek</h2>
+                <div class="flex items-center gap-4">
+                    <h2>Twój Ekwipunek</h2>
+                    <select id="sort-main-inv" class="glass-select" onchange="renderInventory()" style="margin-left: 15px;">
+                        <option value="desc">Sortuj: Od najdroższych</option>
+                        <option value="asc">Sortuj: Od najtańszych</option>
+                    </select>
+                </div>
                 <div class="inventory-stats glass-panel">
                     <span>Łączna wartość: <b id="totalValue" class="neon-text-green">0.00 zł</b></span>
                     <button class="sell-all-btn glow-effect-red" onclick="sellAll()">Sprzedaj wszystko</button>
