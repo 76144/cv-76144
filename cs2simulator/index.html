@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>CaseSimulator Pro - Ostateczna Wersja</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -19,6 +20,7 @@
         </div>
         <nav class="main-nav">
             <button onclick="switchTab('cases')" class="nav-btn">Skrzynki</button>
+            <button onclick="switchTab('battle')" class="nav-btn glow-text" style="color: var(--accent-cyan) !important; text-shadow: 0 0 10px rgba(0,240,255,0.5);">Case Battle</button>
             <button onclick="switchTab('upgrader')" class="nav-btn glow-text">Upgrader</button>
             <button onclick="switchTab('inventory')" class="nav-btn">Ekwipunek</button>
         </nav>
@@ -67,6 +69,65 @@
             </div>
             <h3 class="contents-title fade-in delay-3">Zawartość skrzynki</h3>
             <div class="contents-grid-new stagger-animate" id="caseContentsGrid"></div>
+        </section>
+
+        <section id="view-battle" class="view">
+            
+            <div id="battle-creator" class="fade-in">
+                <div class="battle-header flex-between mb-6">
+                    <h2 class="neon-text" style="color: var(--accent-cyan); font-size: 36px;">Nowa Bitwa</h2>
+                </div>
+
+                <div class="battle-settings-grid glass-panel p-6">
+                    <div class="battle-config-panel">
+                        <h4 class="text-muted mb-2 text-sm uppercase tracking-wide">Wybierz Tryb</h4>
+                        <div class="flex gap-2 mb-6">
+                            <button class="battle-mode-btn active">Standard</button>
+                            <button class="battle-mode-btn" disabled>Underdog 🔒</button>
+                            <button class="battle-mode-btn" disabled>Shared 🔒</button>
+                        </div>
+
+                        <h4 class="text-muted mb-2 text-sm uppercase tracking-wide">Układ Graczy</h4>
+                        <select id="battle-format-select" class="glass-select w-full mb-6" onchange="changeBattleFormat()">
+                            <option value="2">1 vs 1</option>
+                            <option value="3">1 vs 1 vs 1</option>
+                            <option value="4">1 vs 1 vs 1 vs 1</option>
+                        </select>
+
+                        <h4 class="text-muted mb-2 text-sm uppercase tracking-wide">Gracze</h4>
+                        <div class="battle-slots flex gap-4" id="battle-slots-container">
+                            </div>
+                    </div>
+
+                    <div class="battle-cases-panel">
+                        <div class="flex-between mb-4">
+                            <h4 class="text-muted text-sm uppercase tracking-wide">Skrzynki w bitwie (<span id="b-cases-count">0</span>/20)</h4>
+                            <span class="text-cyan font-bold">Koszt: <span id="b-total-cost">0.00</span> zł</span>
+                        </div>
+                        
+                        <div class="b-selected-cases p-4 bg-dark border-glass rounded-lg min-h-32 flex gap-2 flex-wrap mb-6" id="b-selected-cases">
+                            <p class="text-muted text-sm w-full text-center mt-8">Brak skrzynek. Dodaj je z listy poniżej.</p>
+                        </div>
+
+                        <h4 class="text-muted mb-2 text-sm uppercase tracking-wide">Dostępne skrzynki</h4>
+                        <div class="b-available-cases grid-auto-fill gap-4" id="b-available-cases">
+                            </div>
+
+                        <button class="glow-effect w-full mt-6" onclick="startBattle()">ROZPOCZNIJ BITWĘ ZA <span id="b-btn-cost">0.00</span> zł</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="battle-active" style="display: none;" class="fade-in">
+                <div class="battle-top-bar glass-panel flex-between p-4 mb-6">
+                    <h3 class="text-cyan m-0">Runda <span id="b-current-round">1</span> / <span id="b-total-rounds">1</span></h3>
+                    <div class="b-round-icons flex gap-2" id="b-round-icons"></div>
+                    <button class="sell-btn w-auto m-0 px-6 py-2 hidden" id="b-finish-btn" onclick="exitBattle()">Zakończ i odbierz nagrody</button>
+                </div>
+
+                <div class="battle-arena flex gap-4" id="battle-arena">
+                    </div>
+            </div>
         </section>
 
         <section id="view-upgrader" class="view">
@@ -137,9 +198,9 @@
 
         <section id="view-inventory" class="view">
             <div class="inventory-header fade-in">
-                <div class="flex items-center gap-4">
+                <div class="flex" style="align-items: center; gap: 15px;">
                     <h2>Twój Ekwipunek</h2>
-                    <select id="sort-main-inv" class="glass-select" onchange="renderInventory()" style="margin-left: 15px;">
+                    <select id="sort-main-inv" class="glass-select" onchange="renderInventory()">
                         <option value="desc">Sortuj: Od najdroższych</option>
                         <option value="asc">Sortuj: Od najtańszych</option>
                     </select>
