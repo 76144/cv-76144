@@ -8,7 +8,13 @@ let openQuantity = 1;
 let upInputs = [];
 let upTargets = [];
 let upBalance = 0;
-const HOUSE_EDGE = 0.10; // Marża ustawiona na 10% (Rynkowa)
+const HOUSE_EDGE = 0.10; 
+
+// --- BATTLE STATE ---
+let bFormat = 2; // Ilu graczy (2, 3 lub 4)
+let bPlayers = []; // [{type: 'player'|'bot', name: '..', avatar: '..', total: 0, items: []}]
+let bCases = []; // Zbiór wybranych skrzynek {caseObj}
+let bCurrentRound = 0;
 
 const generateStyleImage = (text, hexColor) => {
     const color = hexColor.replace('#', '');
@@ -16,7 +22,7 @@ const generateStyleImage = (text, hexColor) => {
 };
 
 // ============================================
-// BAZA SKRZYNEK (Oparte na EV i Marży 10%)
+// BAZA SKRZYNEK (EV + 10% Marży)
 // ============================================
 const casesData = [
     {
@@ -73,7 +79,6 @@ casesData.forEach(caseObj => {
         }
     });
 });
-// Startowe posortowanie sklepu
 siteStoreItems.sort((a, b) => b.price - a.price);
 
 function generateSafeId() { return 'item_' + Date.now().toString() + '_' + Math.random().toString(36).substring(2, 9); }
@@ -98,14 +103,12 @@ function updateBalanceDisplay() {
     animateValue(balanceEl, lastBalance, balance, 800);
     lastBalance = balance;
 
-    // DYNAMICZNY SUWAK: Ustawiamy maksymalną wartość suwaka w Upgraderze na aktualne saldo
     const upSlider = document.getElementById('up-slider');
     if (upSlider) {
         upSlider.max = balance;
-        // Jeśli aktualnie wybrana kwota jest wyższa niż nowe saldo, zbijamy ją do maksimum
         if (parseFloat(upSlider.value) > balance) {
             upSlider.value = balance;
-            updateUpgrader(); // Przeliczamy szansę
+            updateUpgrader(); 
         }
     }
 }
@@ -121,6 +124,7 @@ function switchTab(tabId) {
     
     if(tabId === 'inventory') renderInventory();
     if(tabId === 'upgrader') { renderUpgraderInvs(); updateUpgrader(); }
+    if(tabId === 'battle') { initBattleCreator(); }
 }
 
 function init() {
@@ -136,7 +140,16 @@ function init() {
     });
 }
 
-// === OTWIERANIE SKRZYNEK ===
+function getRolledItem(items) {
+    const rand = Math.random() * 100;
+    let cumulative = 0;
+    for (let item of items) { cumulative += item.chance; if (rand <= cumulative) return item; }
+    return items[items.length - 1]; 
+}
+
+// ============================================
+// SYSTEM OTWIERANIA SKRZYNEK (SINGLE)
+// ============================================
 window.setQuantity = function(q, btnElement) {
     if (isSpinning) return;
     openQuantity = q;
@@ -172,13 +185,6 @@ function setupCaseOpening(caseObj) {
     document.getElementById('rouletteStrip').style.transform = 'translateX(0)';
     document.getElementById('rouletteStrip').innerHTML = ''; 
     switchTab('opening');
-}
-
-function getRolledItem(items) {
-    const rand = Math.random() * 100;
-    let cumulative = 0;
-    for (let item of items) { cumulative += item.chance; if (rand <= cumulative) return item; }
-    return items[items.length - 1]; 
 }
 
 function spinRoulette() {
@@ -232,7 +238,9 @@ function spinRoulette() {
     }
 }
 
-// === SYSTEM UPGRADERA ===
+// ============================================
+// SYSTEM UPGRADERA
+// ============================================
 window.clearUpInputs = function() { upInputs = []; updateUpgrader(); renderUpgraderInvs(); }
 window.clearUpTargets = function() { upTargets = []; updateUpgrader(); renderUpgraderInvs(); }
 
@@ -241,14 +249,12 @@ window.toggleUpInput = function(uniqueId) {
     else { const item = inventory.find(i => i.uniqueId === uniqueId); if(item) upInputs.push(item); }
     updateUpgrader(); renderUpgraderInvs();
 }
-
 window.toggleUpTarget = function(storeId) {
     const item = siteStoreItems.find(i => i.storeId === storeId);
     if(item) upTargets.push({...item, tempId: Math.random()});
     updateUpgrader(); renderUpgraderInvs();
 }
 
-// Funkcja renderująca dolne siatki upgradera z uwzględnieniem sortowania
 window.renderUpgraderInvs = function() {
     const uInv = document.getElementById('up-user-inv');
     const sInv = document.getElementById('up-store-inv');
@@ -260,7 +266,6 @@ window.renderUpgraderInvs = function() {
     if(inventory.length === 0) {
         uInv.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">Brak przedmiotów.</p>';
     } else {
-        // Zastosowanie sortowania do Ekwipunku Upgradera
         let sortedUserInv = [...inventory];
         if(userSortOrder === 'desc') sortedUserInv.sort((a,b) => b.price - a.price);
         else sortedUserInv.sort((a,b) => a.price - b.price);
@@ -276,7 +281,6 @@ window.renderUpgraderInvs = function() {
         });
     }
 
-    // Zastosowanie sortowania do Sklepu Upgradera
     let sortedStoreItems = [...siteStoreItems];
     if(storeSortOrder === 'desc') sortedStoreItems.sort((a,b) => b.price - a.price);
     else sortedStoreItems.sort((a,b) => a.price - b.price);
@@ -332,7 +336,6 @@ window.updateUpgrader = function() {
     wheelRing.style.transition = 'none';
     wheelRing.style.transform = 'rotate(0deg)';
 
-    // IDEALNIE ODCINANA GRAFIKA KOŁA: Użycie słowa 'transparent', aby uniknąć poszarpanych/wystających pikseli
     if(chance > 0) {
         wheelRing.style.background = `conic-gradient(var(--accent-green) 0% ${chance}%, transparent ${chance}% 100%)`;
         document.getElementById('up-wheel-container').style.boxShadow = `0 0 40px rgba(0, 255, 136, 0.3)`;
@@ -371,7 +374,7 @@ window.spinUpgrader = function() {
     balance -= upBalance;
     const inputIds = upInputs.map(i => i.uniqueId);
     inventory = inventory.filter(i => !inputIds.includes(i.uniqueId)); 
-    updateBalanceDisplay(); // Zaktualizuje również maksymalny suwak
+    updateBalanceDisplay(); 
     
     isSpinning = true;
     const btn = document.getElementById('up-btn');
@@ -416,6 +419,284 @@ window.spinUpgrader = function() {
     }, 7500); 
 }
 
+
+// ============================================
+// SYSTEM CASE BATTLE
+// ============================================
+
+const botNames = ["Bot Bartek", "Bot Dawid", "Bot Kacper", "Bot Matrix", "Bot Snajper"];
+
+function initBattleCreator() {
+    bCases = [];
+    document.getElementById('battle-creator').style.display = 'block';
+    document.getElementById('battle-active').style.display = 'none';
+    changeBattleFormat();
+    renderBattleAvailableCases();
+    renderBattleSelectedCases();
+}
+
+window.changeBattleFormat = function() {
+    bFormat = parseInt(document.getElementById('battle-format-select').value);
+    bPlayers = [{type: 'player', name: 'TY', avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=You', total: 0, items: []}];
+    renderBattleSlots();
+}
+
+window.renderBattleSlots = function() {
+    const container = document.getElementById('battle-slots-container');
+    container.innerHTML = '';
+    
+    for(let i=0; i < bFormat; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'b-player-slot';
+        
+        if(bPlayers[i]) {
+            // Slot zajęty
+            slot.innerHTML = `
+                <img src="${bPlayers[i].avatar}">
+                <p class="font-bold m-0">${bPlayers[i].name}</p>
+                ${i !== 0 ? `<button class="b-remove-bot" onclick="removeBot(${i})">X</button>` : ''}
+            `;
+        } else {
+            // Slot pusty
+            slot.classList.add('empty');
+            slot.innerHTML = `<span style="font-size:30px">+</span><p class="m-0 text-sm">Dodaj Bota</p>`;
+            slot.onclick = () => addBot(i);
+        }
+        container.appendChild(slot);
+    }
+}
+
+window.addBot = function(index) {
+    const randomName = botNames[Math.floor(Math.random() * botNames.length)];
+    bPlayers[index] = {
+        type: 'bot', 
+        name: randomName, 
+        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${Math.random()}`, 
+        total: 0, 
+        items: []
+    };
+    renderBattleSlots();
+}
+
+window.removeBot = function(index) {
+    bPlayers[index] = null;
+    renderBattleSlots();
+}
+
+function renderBattleAvailableCases() {
+    const container = document.getElementById('b-available-cases');
+    container.innerHTML = '';
+    casesData.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'b-case-card';
+        card.innerHTML = `<img src="${c.img}"><h4>${c.name}</h4><p class="text-sm">${c.price.toFixed(2)} zł</p>`;
+        card.onclick = () => {
+            if(bCases.length < 20) {
+                bCases.push(c);
+                renderBattleSelectedCases();
+            } else { alert("Maksymalnie 20 skrzynek!"); }
+        };
+        container.appendChild(card);
+    });
+}
+
+function renderBattleSelectedCases() {
+    const container = document.getElementById('b-selected-cases');
+    const totalCostSpan = document.getElementById('b-total-cost');
+    const btnCostSpan = document.getElementById('b-btn-cost');
+    const countSpan = document.getElementById('b-cases-count');
+
+    container.innerHTML = '';
+    let cost = 0;
+
+    if(bCases.length === 0) {
+        container.innerHTML = '<p class="text-muted text-sm w-full text-center mt-8">Brak skrzynek. Dodaj je z listy poniżej.</p>';
+    } else {
+        bCases.forEach((c, index) => {
+            cost += c.price;
+            const mc = document.createElement('div');
+            mc.className = 'b-mini-case';
+            mc.innerHTML = `<img src="${c.img}">`;
+            mc.onclick = () => { bCases.splice(index, 1); renderBattleSelectedCases(); }
+            container.appendChild(mc);
+        });
+    }
+
+    totalCostSpan.innerText = cost.toFixed(2);
+    btnCostSpan.innerText = cost.toFixed(2);
+    countSpan.innerText = bCases.length;
+}
+
+window.startBattle = function() {
+    if(bCases.length === 0) return alert("Musisz wybrać co najmniej 1 skrzynkę!");
+    for(let i=0; i < bFormat; i++) {
+        if(!bPlayers[i]) return alert("Musisz zapełnić wszystkie sloty graczami (botami)!");
+    }
+
+    const totalCost = bCases.reduce((sum, c) => sum + c.price, 0);
+    if(balance < totalCost) return alert("Nie masz wystarczających środków na tę bitwę!");
+
+    // Pobranie kasy tylko za gracza
+    balance -= totalCost;
+    updateBalanceDisplay();
+
+    // Inicjalizacja areny
+    document.getElementById('battle-creator').style.display = 'none';
+    document.getElementById('battle-active').style.display = 'block';
+    document.getElementById('b-finish-btn').classList.add('hidden');
+    
+    bCurrentRound = 0;
+    document.getElementById('b-total-rounds').innerText = bCases.length;
+    
+    const iconsContainer = document.getElementById('b-round-icons');
+    iconsContainer.innerHTML = bCases.map((c, i) => `<img src="${c.img}" class="b-round-icon ${i===0 ? 'active' : ''}" id="b-icon-${i}">`).join('');
+
+    renderBattleArena();
+    
+    setTimeout(() => { playBattleRound(); }, 1000);
+}
+
+function renderBattleArena() {
+    const arena = document.getElementById('battle-arena');
+    arena.innerHTML = '';
+    
+    bPlayers.forEach((p, i) => {
+        const col = document.createElement('div');
+        col.className = 'battle-col';
+        col.innerHTML = `
+            <div class="b-col-header" id="b-header-${i}">
+                <img src="${p.avatar}">
+                <p class="m-0 font-bold">${p.name}</p>
+                <h3 class="m-0 text-green" id="b-total-${i}">0.00 zł</h3>
+            </div>
+            <div class="vert-roulette">
+                <div class="vert-crosshair"></div>
+                <div class="vert-roulette-strip" id="b-strip-${i}"></div>
+            </div>
+            <div class="b-inventory" id="b-inv-${i}"></div>
+        `;
+        arena.appendChild(col);
+    });
+}
+
+function playBattleRound() {
+    if(bCurrentRound >= bCases.length) {
+        finishBattle();
+        return;
+    }
+
+    document.getElementById('b-current-round').innerText = bCurrentRound + 1;
+    document.querySelectorAll('.b-round-icon').forEach(el => el.classList.remove('active'));
+    document.getElementById(`b-icon-${bCurrentRound}`).classList.remove('done');
+    document.getElementById(`b-icon-${bCurrentRound}`).classList.add('active');
+
+    const currentCaseObj = bCases[bCurrentRound];
+    const itemsToGenerate = 50;
+    const winningIndex = 40;
+
+    let roundWinners = []; // Zbiera wygrane itemy dla kazdego gracza
+
+    bPlayers.forEach((p, i) => {
+        const strip = document.getElementById(`b-strip-${i}`);
+        strip.innerHTML = '';
+        strip.style.transition = 'none';
+        strip.style.transform = 'translateY(0)';
+
+        const wonItem = getRolledItem(currentCaseObj.items);
+        roundWinners.push(wonItem);
+
+        for(let j=0; j < itemsToGenerate; j++) {
+            let displayItem = (j === winningIndex) ? wonItem : currentCaseObj.items[Math.floor(Math.random() * currentCaseObj.items.length)];
+            strip.innerHTML += `
+                <div class="vert-item" style="border-bottom-color: ${displayItem.rarity}">
+                    <img src="${displayItem.img}">
+                    <span>${displayItem.weapon}</span>
+                </div>
+            `;
+        }
+    });
+
+    // Wymuszenie reflow
+    document.getElementById(`b-strip-0`).offsetHeight;
+
+    // Odpalenie animacji (Pionowo)
+    bPlayers.forEach((p, i) => {
+        const strip = document.getElementById(`b-strip-${i}`);
+        const itemHeight = 150; // Wysokość vert-item to ok 150px
+        const containerHeight = 350; // Wysokość okna ruletki
+        
+        // Obliczenie na srodek + losowy przeskok
+        const randomOffset = Math.floor(Math.random() * 80) - 40;
+        const stopPosition = (winningIndex * itemHeight) - (containerHeight / 2) + (itemHeight / 2) + randomOffset;
+
+        strip.style.transition = 'transform 5s cubic-bezier(0.1, 0, 0.1, 1)';
+        strip.style.transform = `translateY(-${stopPosition}px)`;
+    });
+
+    // Po animacji (5s) + 0.5s przerwy
+    setTimeout(() => {
+        bPlayers.forEach((p, i) => {
+            const wonItem = roundWinners[i];
+            p.total += wonItem.price;
+            p.items.push({...wonItem, uniqueId: generateSafeId()});
+            
+            document.getElementById(`b-total-${i}`).innerText = p.total.toFixed(2) + ' zł';
+            
+            const invContainer = document.getElementById(`b-inv-${i}`);
+            invContainer.innerHTML = `
+                <div class="b-inventory-item" style="border-left-color: ${wonItem.rarity}">
+                    <img src="${wonItem.img}">
+                    <div class="details"><p>${wonItem.weapon}</p><span>${wonItem.name}</span></div>
+                    <div class="price">${wonItem.price.toFixed(2)}zł</div>
+                </div>
+            ` + invContainer.innerHTML;
+        });
+
+        document.getElementById(`b-icon-${bCurrentRound}`).classList.remove('active');
+        document.getElementById(`b-icon-${bCurrentRound}`).classList.add('done');
+
+        bCurrentRound++;
+        setTimeout(() => { playBattleRound(); }, 1000); // Sekunda pauzy miedzy rundami
+    }, 5500);
+}
+
+function finishBattle() {
+    let maxTotal = -1;
+    bPlayers.forEach(p => { if(p.total > maxTotal) maxTotal = p.total; });
+    
+    // Szukamy kto wygrał (Może być remis)
+    const winners = bPlayers.filter(p => p.total === maxTotal);
+    const isPlayerWinner = winners.some(w => w.type === 'player');
+
+    // Kolorowanie zwycięzców
+    bPlayers.forEach((p, i) => {
+        if(p.total === maxTotal) document.getElementById(`b-header-${i}`).classList.add('winner');
+    });
+
+    // Pokaż przycisk wyjścia
+    const finishBtn = document.getElementById('b-finish-btn');
+    finishBtn.classList.remove('hidden');
+
+    // Zgarnia wszystkie przedmioty, jeśli wygrał "Player"
+    let allBattleItems = [];
+    bPlayers.forEach(p => {
+        allBattleItems = allBattleItems.concat(p.items);
+    });
+
+    if(isPlayerWinner) {
+        // Jeśli remis z botem, po prostu mu zaliczamy wygraną całej puli (najczęstsza mechanika)
+        allBattleItems.forEach(item => inventory.push(item));
+        renderInventory();
+        setTimeout(() => alert("WYGRAŁEŚ BITEWĘ! Cała pula przedmiotów trafia do Twojego ekwipunku!"), 500);
+    } else {
+        setTimeout(() => alert("Przegrałeś. Przedmioty zabiera " + winners[0].name), 500);
+    }
+}
+
+window.exitBattle = function() {
+    switchTab('battle'); // Wraca do kreatora
+}
+
 // === WYNIKI I OKIENKA ===
 window.showResultModal = function(wonItems, totalCost) {
     const modal = document.getElementById('resultModal');
@@ -439,24 +720,17 @@ window.showResultModal = function(wonItems, totalCost) {
     });
 
     const profit = totalValue - totalCost;
-    let profitText = '';
-    let profitColor = '';
+    let profitText = ''; let profitColor = '';
 
     if (profit > 0) {
-        profitText = `JESTEŚ NA PLUS +${profit.toFixed(2)} zł! 🚀`;
-        profitColor = 'var(--accent-green)'; 
-        modalTitle.innerText = "WYGRANA!";
-        modalTitle.style.color = "var(--accent-green)";
+        profitText = `JESTEŚ NA PLUS +${profit.toFixed(2)} zł! 🚀`; profitColor = 'var(--accent-green)'; 
+        modalTitle.innerText = "WYGRANA!"; modalTitle.style.color = "var(--accent-green)";
     } else if (profit < 0) {
-        profitText = `STRATA ${Math.abs(profit).toFixed(2)} zł. 📉`;
-        profitColor = 'var(--accent-red)'; 
-        modalTitle.innerText = "SŁABY DROP...";
-        modalTitle.style.color = "var(--accent-red)";
+        profitText = `STRATA ${Math.abs(profit).toFixed(2)} zł. 📉`; profitColor = 'var(--accent-red)'; 
+        modalTitle.innerText = "SŁABY DROP..."; modalTitle.style.color = "var(--accent-red)";
     } else {
-        profitText = `WYSZEDŁEŚ NA ZERO. ⚖️`;
-        profitColor = 'var(--text-muted)'; 
-        modalTitle.innerText = "ZWROT KOSZTÓW";
-        modalTitle.style.color = "var(--text-muted)";
+        profitText = `WYSZEDŁEŚ NA ZERO. ⚖️`; profitColor = 'var(--text-muted)'; 
+        modalTitle.innerText = "ZWROT KOSZTÓW"; modalTitle.style.color = "var(--text-muted)";
     }
 
     summary.innerHTML = `
@@ -466,7 +740,6 @@ window.showResultModal = function(wonItems, totalCost) {
             <p style="color: ${profitColor}; font-size: 20px; font-weight: bold; font-family: 'Rajdhani', sans-serif;">${profitText}</p>
         </div>
     `;
-
     modal.classList.add('active');
 }
 
@@ -483,13 +756,9 @@ window.renderInventory = function() {
 
     if(inventory.length === 0) return inventoryGrid.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 18px;">Ekwipunek jest pusty.</p>';
 
-    // Zastosowanie sortowania do głównego ekwipunku
     let sortedInventory = [...inventory];
-    if (sortOrder === 'desc') {
-        sortedInventory.sort((a, b) => b.price - a.price);
-    } else {
-        sortedInventory.sort((a, b) => a.price - b.price);
-    }
+    if (sortOrder === 'desc') { sortedInventory.sort((a, b) => b.price - a.price); } 
+    else { sortedInventory.sort((a, b) => a.price - b.price); }
 
     sortedInventory.forEach((item, index) => {
         const card = document.createElement('div');
