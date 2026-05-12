@@ -82,9 +82,9 @@
                     <div class="battle-config-panel">
                         <h4 class="text-muted mb-2 text-sm uppercase tracking-wide">Wybierz Tryb</h4>
                         <div class="flex gap-2 mb-6">
-                            <button class="battle-mode-btn active">Standard</button>
-                            <button class="battle-mode-btn" disabled>Underdog 🔒</button>
-                            <button class="battle-mode-btn" disabled>Shared 🔒</button>
+                            <button class="battle-mode-btn active" onclick="setBattleMode('standard', this)">Standard</button>
+                            <button class="battle-mode-btn" onclick="setBattleMode('underdog', this)">Underdog</button>
+                            <button class="battle-mode-btn" onclick="setBattleMode('shared', this)">Shared</button>
                         </div>
 
                         <h4 class="text-muted mb-2 text-sm uppercase tracking-wide">Układ Graczy</h4>
@@ -120,7 +120,7 @@
 
             <div id="battle-active" style="display: none;" class="fade-in">
                 <div class="battle-top-bar glass-panel flex-between p-4 mb-6">
-                    <h3 class="text-cyan m-0">Runda <span id="b-current-round">1</span> / <span id="b-total-rounds">1</span></h3>
+                    <h3 class="text-cyan m-0">Runda <span id="b-current-round">1</span> / <span id="b-total-rounds">1</span> <span id="b-active-mode-label" style="font-size: 14px; margin-left: 10px; color: var(--text-muted);"></span></h3>
                     <div class="b-round-icons flex gap-2" id="b-round-icons"></div>
                     <button class="sell-btn w-auto m-0 px-6 py-2 hidden" id="b-finish-btn" onclick="exitBattle()">Zakończ i odbierz nagrody</button>
                 </div>
