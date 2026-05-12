@@ -11,9 +11,10 @@ let upBalance = 0;
 const HOUSE_EDGE = 0.10; 
 
 // --- BATTLE STATE ---
-let bFormat = 2; // Ilu graczy (2, 3 lub 4)
-let bPlayers = []; // [{type: 'player'|'bot', name: '..', avatar: '..', total: 0, items: []}]
-let bCases = []; // Zbiór wybranych skrzynek {caseObj}
+let bFormat = 2; // 2, 3, 4
+let bMode = 'standard'; // 'standard', 'underdog', 'shared'
+let bPlayers = []; 
+let bCases = []; 
 let bCurrentRound = 0;
 
 const generateStyleImage = (text, hexColor) => {
@@ -419,12 +420,17 @@ window.spinUpgrader = function() {
     }, 7500); 
 }
 
-
 // ============================================
 // SYSTEM CASE BATTLE
 // ============================================
 
 const botNames = ["Bot Bartek", "Bot Dawid", "Bot Kacper", "Bot Matrix", "Bot Snajper"];
+
+window.setBattleMode = function(mode, btnElement) {
+    bMode = mode;
+    document.querySelectorAll('.battle-mode-btn').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
+}
 
 function initBattleCreator() {
     bCases = [];
@@ -450,14 +456,12 @@ window.renderBattleSlots = function() {
         slot.className = 'b-player-slot';
         
         if(bPlayers[i]) {
-            // Slot zajęty
             slot.innerHTML = `
                 <img src="${bPlayers[i].avatar}">
                 <p class="font-bold m-0">${bPlayers[i].name}</p>
                 ${i !== 0 ? `<button class="b-remove-bot" onclick="removeBot(${i})">X</button>` : ''}
             `;
         } else {
-            // Slot pusty
             slot.classList.add('empty');
             slot.innerHTML = `<span style="font-size:30px">+</span><p class="m-0 text-sm">Dodaj Bota</p>`;
             slot.onclick = () => addBot(i);
@@ -543,6 +547,7 @@ window.startBattle = function() {
     // Inicjalizacja areny
     document.getElementById('battle-creator').style.display = 'none';
     document.getElementById('battle-active').style.display = 'block';
+    document.getElementById('b-active-mode-label').innerText = `[Tryb: ${bMode.toUpperCase()}]`;
     document.getElementById('b-finish-btn').classList.add('hidden');
     
     bCurrentRound = 0;
@@ -622,10 +627,9 @@ function playBattleRound() {
     // Odpalenie animacji (Pionowo)
     bPlayers.forEach((p, i) => {
         const strip = document.getElementById(`b-strip-${i}`);
-        const itemHeight = 150; // Wysokość vert-item to ok 150px
-        const containerHeight = 350; // Wysokość okna ruletki
+        const itemHeight = 150;
+        const containerHeight = 350; 
         
-        // Obliczenie na srodek + losowy przeskok
         const randomOffset = Math.floor(Math.random() * 80) - 40;
         const stopPosition = (winningIndex * itemHeight) - (containerHeight / 2) + (itemHeight / 2) + randomOffset;
 
@@ -656,45 +660,64 @@ function playBattleRound() {
         document.getElementById(`b-icon-${bCurrentRound}`).classList.add('done');
 
         bCurrentRound++;
-        setTimeout(() => { playBattleRound(); }, 1000); // Sekunda pauzy miedzy rundami
+        setTimeout(() => { playBattleRound(); }, 1000);
     }, 5500);
 }
 
 function finishBattle() {
-    let maxTotal = -1;
-    bPlayers.forEach(p => { if(p.total > maxTotal) maxTotal = p.total; });
+    let winningTotal;
     
-    // Szukamy kto wygrał (Może być remis)
-    const winners = bPlayers.filter(p => p.total === maxTotal);
+    // Obliczanie wartości wygrywającej w zależności od trybu
+    if (bMode === 'underdog') {
+        winningTotal = Math.min(...bPlayers.map(p => p.total));
+    } else { // Dla Standard i Shared max jest punktem odniesienia
+        winningTotal = Math.max(...bPlayers.map(p => p.total));
+    }
+    
+    const winners = bPlayers.filter(p => p.total === winningTotal);
     const isPlayerWinner = winners.some(w => w.type === 'player');
 
-    // Kolorowanie zwycięzców
-    bPlayers.forEach((p, i) => {
-        if(p.total === maxTotal) document.getElementById(`b-header-${i}`).classList.add('winner');
+    let allBattleItems = [];
+    let grandTotal = 0;
+    
+    bPlayers.forEach(p => {
+        allBattleItems = allBattleItems.concat(p.items);
+        grandTotal += p.total;
     });
 
-    // Pokaż przycisk wyjścia
+    // Pokoloruj wszystkich jeśli Shared, w przeciwnym razie tylko zwycięzców
+    if (bMode === 'shared') {
+        bPlayers.forEach((p, i) => document.getElementById(`b-header-${i}`).classList.add('winner'));
+    } else {
+        bPlayers.forEach((p, i) => {
+            if(p.total === winningTotal) document.getElementById(`b-header-${i}`).classList.add('winner');
+        });
+    }
+
     const finishBtn = document.getElementById('b-finish-btn');
     finishBtn.classList.remove('hidden');
 
-    // Zgarnia wszystkie przedmioty, jeśli wygrał "Player"
-    let allBattleItems = [];
-    bPlayers.forEach(p => {
-        allBattleItems = allBattleItems.concat(p.items);
-    });
+    // ROZLICZENIE: Tryb Shared (Każdy zgarnia po równo w gotówce)
+    if (bMode === 'shared') {
+        const splitValue = grandTotal / bFormat;
+        balance += splitValue;
+        updateBalanceDisplay();
+        setTimeout(() => alert(`Tryb SHARED: Wartość wszystkich dropów to ${grandTotal.toFixed(2)} zł. Każdy gracz otrzymuje po ${splitValue.toFixed(2)} zł do salda!`), 500);
+        return;
+    }
 
+    // ROZLICZENIE: Tryby Standard / Underdog
     if(isPlayerWinner) {
-        // Jeśli remis z botem, po prostu mu zaliczamy wygraną całej puli (najczęstsza mechanika)
         allBattleItems.forEach(item => inventory.push(item));
         renderInventory();
-        setTimeout(() => alert("WYGRAŁEŚ BITEWĘ! Cała pula przedmiotów trafia do Twojego ekwipunku!"), 500);
+        setTimeout(() => alert(`WYGRAŁEŚ BITEWĘ (${bMode.toUpperCase()})! Cała pula trafia do Twojego ekwipunku!`), 500);
     } else {
-        setTimeout(() => alert("Przegrałeś. Przedmioty zabiera " + winners[0].name), 500);
+        setTimeout(() => alert(`Przegrałeś (${bMode.toUpperCase()}). Przedmioty zabiera ${winners[0].name}`), 500);
     }
 }
 
 window.exitBattle = function() {
-    switchTab('battle'); // Wraca do kreatora
+    switchTab('battle'); 
 }
 
 // === WYNIKI I OKIENKA ===
