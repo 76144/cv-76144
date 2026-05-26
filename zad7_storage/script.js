@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = true;
 
                 // UWAGA: Poniżej wklej swój link z Formspree lub Supabase!
-                const endpointURL = 'https://formspree.io/f/TWÓJ_KOD_TUTAJ'; 
+                const endpointURL = 'https://formspree.io/f/mbdbzvbd'; 
 
                 fetch(endpointURL, {
                     method: 'POST',
