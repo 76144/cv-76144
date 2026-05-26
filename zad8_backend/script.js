@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // --- OBSŁUGA MOTYWU ---
     const btnTheme = document.getElementById('btn-theme');
     const themeLink = document.getElementById('theme-link');
 
@@ -18,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- POKAŻ/UKRYJ PROJEKTY ---
     const btnToggleProjects = document.getElementById('btn-toggle-projects');
     const sectionProjects = document.getElementById('sekcja-projekty');
 
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- WALIDACJA I WYSYŁKA FORMULARZA (FETCH POST) ---
     const form = document.getElementById('contactForm');
     const successMessage = document.getElementById('success-message');
 
@@ -81,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (isValid) {
-                // --- NOWY KOD DO ZADANIA: WYSYŁANIE DANYCH POST ---
                 const dataToSend = {
                     imie: values.imie,
                     nazwisko: values.nazwisko,
@@ -94,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.textContent = 'Wysyłanie...';
                 submitBtn.disabled = true;
 
-                // UWAGA: Poniżej wklej swój link z Formspree lub Supabase!
                 const endpointURL = 'https://formspree.io/f/mbdbzvbd'; 
 
                 fetch(endpointURL, {
@@ -106,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(response => {
                     if(response.ok) {
-                        // Wyświetlenie komunikatu sukcesu po potwierdzeniu z serwera
                         if (successMessage) successMessage.style.display = 'block';
                         form.reset();
                     } else {
@@ -125,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- WCZYTYWANIE DANYCH JSON ---
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
@@ -149,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => console.error('Błąd JSON:', err));
 
-    // --- OBSŁUGA NOTATEK (LOCAL STORAGE) ---
     const btnAddNote = document.getElementById('btn-dodaj-notatke');
     const inputNote = document.getElementById('nowa-notatka');
     const notesList = document.getElementById('lista-notatek');
