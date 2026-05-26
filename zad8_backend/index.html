@@ -1,1 +1,144 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Kacper Pietrak - 76144</title>
+    <link id="theme-link" rel="stylesheet" href="green.css">
+</head>
+<body>
 
+    <main>
+        <header>
+            <h1>Kacper Pietrak - CV</h1>
+            <img src="moje_zdjecie.jpg.png" alt="Zdjęcie profilowe - Kacper Pietrak">
+            
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                <button id="btn-theme" style="padding: 8px 16px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;">Zmień motyw (Red/Green)</button>
+                <button id="btn-toggle-projects" style="padding: 8px 16px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;">Pokaż/Ukryj Projekty</button>
+            </div>
+        </header>
+        
+        <section>
+            <h2>Kontakt</h2>
+            <p>Email: <a href="mailto:kpietra5@stu.vistula.edu.pl">kpietra5@stu.vistula.edu.pl</a></p>
+            <p>Telefon: <a href="tel:+48786118136">+48 786 118 136</a></p>
+            <p>Miasto: Warszawa</p>
+            <p>Profile zewnętrzne:</p>
+            <ul>
+                <li><a href="https://github.com/76144" target="_blank" rel="noopener noreferrer">Mój profil GitHub</a></li>
+                <li><a href="https://www.linkedin.com/in/kacper-pietrak-a77a523b8/" target="_blank" rel="noopener noreferrer">Profil LinkedIn</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>O mnie</h2>
+            <p>Jestem studentem pierwszego roku informatyki. Od zawsze fascynowały mnie nowe technologie, a moją największą pasją jest motoryzacja połączona z informatyką – interesuję się systemami wbudowanymi w nowoczesnych samochodach, diagnostyką komputerową pojazdów oraz elektroniką. Moim celem jest rozwój w branży IT, by w przyszłości tworzyć oprogramowanie wspierające branżę automotive.</p>
+        </section>
+
+        <section>
+            <h2>Umiejętności</h2>
+            <ul id="lista-umiejetnosci"></ul>
+        </section>
+
+        <section>
+            <h2>Doświadczenie</h2>
+            <details>
+                <summary>Pracownik Ochrony - Juventus (Biedronka)</summary>
+                <article>
+                    <h3>Pracownik Ochrony - Juventus (Biedronka)</h3>
+                    <p>Okres: 06.2024 - 12.2024</p>
+                    <p>Zapewnienie bezpieczeństwa na terenie obiektu handlowego, monitorowanie systemów CCTV oraz asystowanie pracownikom sklepu w sytuacjach konfliktowych.</p>
+                </article>
+            </details>
+            <details>
+                <summary>Pracownik Sklepu - Żabka Polska</summary>
+                <article>
+                    <h3>Pracownik Sklepu - Żabka Polska</h3>
+                    <p>Okres: 01.2023 - 05.2024</p>
+                    <p>Obsługa klienta przy kasie fiskalnej, przyjmowanie dostaw, dbanie o ekspozycję towaru oraz utrzymywanie standardów czystości.</p>
+                </article>
+            </details>
+        </section>
+
+        <section>
+            <h2>Edukacja</h2>
+            <p>Akademia Finansów i Biznesu Vistula</p>
+            <p>Kierunek: Informatyka</p>
+            <p>Okres: 2025 - obecnie</p>
+        </section>
+
+        <section id="sekcja-projekty">
+            <h2>Projekty</h2>
+            <ul id="lista-projekty"></ul>
+        </section>
+
+        <section id="sekcja-notatki">
+            <h2>Notatki (Local Storage)</h2>
+            <p>Dodaj własną notatkę/zadanie, które zostanie zapisane w Twojej przeglądarce.</p>
+            <div class="form-row" style="align-items: center; gap: 10px;">
+                <div class="input-container" style="flex: 1;">
+                    <input type="text" id="nowa-notatka" placeholder="Wpisz treść notatki...">
+                </div>
+                <button type="button" id="btn-dodaj-notatke" style="padding: 10px 20px; cursor: pointer; background-color: #475569; color: white; border: none; border-radius: 4px; font-weight: bold;">Dodaj</button>
+            </div>
+            <ul id="lista-notatek" style="margin-top: 20px; list-style-type: none; padding-left: 0;"></ul>
+        </section>
+        
+        <section id="napisz-do-mnie">
+            <h2>Napisz do mnie</h2>
+            
+            <div id="success-message" style="display: none; background-color: #dcfce7; color: #166534; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #16a34a; font-weight: bold; text-align: center;">
+                Powiadomienie: Formularz został wysłany poprawnie!
+            </div>
+
+            <form id="contactForm" novalidate>
+                <div class="form-row">
+                    <label for="imie">Imię:</label>
+                    <div class="input-container">
+                        <input type="text" id="imie" placeholder="Wpisz imię...">
+                        <span id="error-imie" class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="nazwisko">Nazwisko:</label>
+                    <div class="input-container">
+                        <input type="text" id="nazwisko" placeholder="Wpisz nazwisko...">
+                        <span id="error-nazwisko" class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="email">E-mail:</label>
+                    <div class="input-container">
+                        <input type="email" id="email" placeholder="np. jan@kowalski.pl">
+                        <span id="error-email" class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="wiadomosc">Wiadomość:</label>
+                    <div class="input-container">
+                        <textarea id="wiadomosc" rows="4" placeholder="Twoja wiadomość..."></textarea>
+                        <span id="error-wiadomosc" class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="label-placeholder"></div>
+                    <button type="submit" id="btn-submit">Wyślij formularz</button>
+                </div>
+            </form>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Kacper Pietrak. Nr indeksu: 76144.</p>
+        <p style="font-size: 0.8em; margin-top: 10px;">Wyrażam zgodę na przetwarzanie moich danych osobowych w celu rekrutacji zgodnie z art. 6 ust. 1 lit. a Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. (RODO).</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
